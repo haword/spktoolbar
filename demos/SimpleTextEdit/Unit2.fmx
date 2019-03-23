@@ -1,0 +1,47 @@
+object CodeForm: TCodeForm
+  Left = 0
+  Top = 0
+  BorderStyle = Single
+  Caption = #1042#1099#1073#1086#1088' '#1082#1086#1076#1080#1088#1086#1074#1082#1080
+  ClientHeight = 102
+  ClientWidth = 234
+  Position = MainFormCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object ComboBox1: TComboBox
+    Items.Strings = (
+      'ASCII'
+      'ANSI'
+      'UTF8'
+      'UNICODE')
+    ItemIndex = 0
+    Position.X = 16.000000000000000000
+    Position.Y = 24.000000000000000000
+    Size.Width = 209.000000000000000000
+    Size.Height = 25.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+  end
+  object Label1: TLabel
+    Position.X = 18.000000000000000000
+    Position.Y = 4.000000000000000000
+    Text = #1050#1086#1076#1080#1088#1086#1074#1082#1072
+    TabOrder = 1
+  end
+  object Button1: TButton
+    ModalResult = 1
+    Position.X = 16.000000000000000000
+    Position.Y = 64.000000000000000000
+    TabOrder = 2
+    Text = #1054#1050
+  end
+  object Button2: TButton
+    ModalResult = 2
+    Position.X = 144.000000000000000000
+    Position.Y = 64.000000000000000000
+    TabOrder = 3
+    Text = #1054#1090#1084#1077#1085#1072
+  end
+end
