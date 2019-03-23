@@ -539,7 +539,8 @@ end;
 
 procedure TSpkToolbar.FreeingTab(ATab: TSpkTab);
 begin
-  FTabs.RemoveReference(ATab);
+  if FTabs <> nil then
+    FTabs.RemoveReference(ATab);
 end;
 
 procedure TSpkToolbar.GetChildren(Proc: TGetChildProc; Root: TComponent);

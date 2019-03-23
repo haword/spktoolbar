@@ -332,7 +332,8 @@ end;
 
 procedure TSpkTab.FreeingPane(APane: TSpkPane);
 begin
-  FPanes.RemoveReference(APane);
+  if FPanes <> nil then
+    FPanes.RemoveReference(APane);
 end;
 
 procedure TSpkTab.GetChildren(Proc: TGetChildProc; Root: TComponent);

@@ -58,7 +58,9 @@ contains
   SpkXMLParser in 'SpkXML\SpkXMLParser.pas',
   SpkXMLTools in 'SpkXML\SpkXMLTools.pas',
   SpkGUITools in 'SpkGUITools\SpkGUITools.pas',
-  SpkToolbarEditor in 'designtime\SpkToolbarEditor.pas';
+  SpkToolbarEditor in 'designtime\SpkToolbarEditor.pas',
+  spkte_EditWindow in 'designtime\spkte_EditWindow.pas' {frmEditWindow},
+  spkte_AppearanceEditor in 'designtime\spkte_AppearanceEditor.pas' {frmAppearanceEditWindow};
 
 //  spkte_AppearanceEditor in 'designtime\spkte_AppearanceEditor.pas';
 

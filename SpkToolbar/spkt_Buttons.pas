@@ -80,7 +80,7 @@ type
     function GetDefaultCaption: string; virtual;
     function SiblingsChecked: Boolean; virtual;
     procedure UncheckSiblings; virtual;
-    procedure DrawDropdownArrow(ABuffer: TBitmap; ARect: TRect; AColor: TAlphaColor);
+    procedure DrawDropdownArrow(ABuffer: TBitmap; ARect: TRectF; AColor: TAlphaColor);
 
      // *** Gettery i settery ***
 
@@ -305,20 +305,23 @@ begin
   end;
 end;
 
-procedure TSpkBaseButton.DrawDropdownArrow(ABuffer: TBitmap; ARect: TRect; AColor: TAlphaColor);
+procedure TSpkBaseButton.DrawDropdownArrow(ABuffer: TBitmap; ARect: TRectF; AColor: TAlphaColor);
 var
   P: TPolygon;
 begin
   SetLength(P, 4);
-
-  P[2].x := ARect.Left + (ARect.Right - ARect.Left) div 2;
-  P[2].y := ARect.Top + (ARect.Bottom - ARect.Top + DropDown_Arrow_Height) div 2 - 1;
-  P[0] := PointF(P[2].x - DropDown_Arrow_Width div 2, P[2].y - DropDown_Arrow_Height div 2);
-  P[1] := PointF(P[2].x + DropDown_Arrow_Width div 2, P[0].y);
+  ARect:= RectF(Round(ARect.Left), Round(ARect.Top), Round(ARect.Right), Round(ARect.Bottom));
+  ARect.Offset(0,0.5);
+  P[2].x := ARect.Left + (ARect.Right - ARect.Left) / 2;
+  P[2].y := ARect.Top + (ARect.Bottom - ARect.Top + DropDown_Arrow_Height) / 2 ;
+  P[0] := PointF(P[2].x - DropDown_Arrow_Width / 2, P[2].y - DropDown_Arrow_Height / 2);
+  P[1] := PointF(P[2].x + DropDown_Arrow_Width / 2, P[0].y);
   P[3] := P[0];
-  ABuffer.Canvas.Fill.Color := AColor;
-  ABuffer.Canvas.Stroke.Kind := TBrushKind.None;
-  ABuffer.Canvas.DrawPolygon(P, 1);
+  ABuffer.Canvas.BeginScene();
+  ABuffer.Canvas.Stroke.Color := AColor;
+  ABuffer.Canvas.Stroke.Kind := TBrushKind.Solid;
+  ABuffer.Canvas.FillPolygon(P, 1);
+  ABuffer.Canvas.EndScene;
 end;
 
 procedure TSpkBaseButton.SetGroupIndex(const Value: Integer);
@@ -405,6 +408,11 @@ begin
    // Przyciski reaguj¹ tylko na lewy przycisk myszy
     if Button <> TMouseButton.mbLeft then
       exit;
+
+    if (FButtonKind = bkToggle) and ((Action = nil) or
+       ((Action is TCustomAction) and not TCustomAction(Action).AutoCheck))
+    then
+      Checked := not Checked;
 
     if FMouseActiveElement = beButton then
     begin
@@ -820,6 +828,7 @@ var
   s: string;
   TextHeight: Integer;
   DrawRgn, TmpRgn: TRectF;
+  DrawR: TRectF;
 begin
   if FToolbarDispatch = nil then
     exit;
@@ -1023,15 +1032,32 @@ begin
         end;
       end;
 
-//      ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
-      ABuffer.Canvas.Font.Family := 'Marlett';
-      ABuffer.Canvas.Font.Size := 8;
-      ABuffer.Canvas.Font.Style := [];
-//      ABuffer.Canvas.Font.Orientation:=0;
-
       x := FButtonRect.Left + (FButtonRect.width - Round(ABuffer.Canvas.Textwidth('u'))) div 2;
       y := FButtonRect.bottom - Round(ABuffer.Canvas.Textheight('u')) - LARGEBUTTON_CHEVRON_HMARGIN;
-      TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
+      DrawR:= RectF(x,y, x + ABuffer.Canvas.TextWidth('u') - 1, y + ABuffer.Canvas.TextHeight('u') - 1);
+      DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+//      if FButtonKind = bkDropdown then
+//      begin
+//        y := Round(FButtonRect.Bottom - ABuffer.Canvas.TextHeight('Tg') - 1);
+//        DrawR := Classes.Rect(FButtonRect.Left, y, FButtonRect.Right, FButtonRect.Bottom);
+//        DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+//      end else
+//      if FButtonKind = bkButtonDropdown then
+//      begin
+//        y := Round(FDropdownRect.Bottom - ABuffer.Canvas.TextHeight('Tg') - 1);
+//        DrawR := Classes.Rect(FDropdownRect.Left, y, FDropDownRect.Right, FDropdownRect.Bottom);
+//        DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+//      end;
+
+////      ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
+//      ABuffer.Canvas.Font.Family := 'Marlett';
+//      ABuffer.Canvas.Font.Size := 8;
+//      ABuffer.Canvas.Font.Style := [];
+////      ABuffer.Canvas.Font.Orientation:=0;
+//
+//      x := FButtonRect.Left + (FButtonRect.width - Round(ABuffer.Canvas.Textwidth('u'))) div 2;
+//      y := FButtonRect.bottom - Round(ABuffer.Canvas.Textheight('u')) - LARGEBUTTON_CHEVRON_HMARGIN;
+//      TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
     end;
 
    {$ENDREGION}
@@ -1388,15 +1414,34 @@ begin
       end;
     end;
 
-//   ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
-    ABuffer.Canvas.Font.Family := 'Marlett';
-    ABuffer.Canvas.Font.Size := 8;
-    ABuffer.Canvas.Font.Style := [];
-//   ABuffer.Canvas.Font.Orientation:=0;
+//      if FButtonKind = bkDropdown then
+//      begin
+//        y := Round(FButtonRect.Bottom - ABuffer.Canvas.TextHeight('Tg') - 1);
+//        DrawR := Classes.Rect(FButtonRect.Left, y, FButtonRect.Right, FButtonRect.Bottom);
+//        DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+//      end else
+//      if FButtonKind = bkButtonDropdown then
+//      begin
+//        y := Round(FDropdownRect.Bottom - ABuffer.Canvas.TextHeight('Tg') - 1);
+//        DrawR := Classes.Rect(FDropdownRect.Left, y, FDropDownRect.Right, FDropdownRect.Bottom);
+//        DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+//      end;
 
-    x := FDropdownRect.Left + (FDropdownRect.width - round(ABuffer.Canvas.Textwidth('u'))) div 2;
-    y := FDropdownRect.bottom - Round(ABuffer.Canvas.Textheight('u')) - LARGEBUTTON_CHEVRON_HMARGIN;
-    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
+      x := FDropdownRect.Left + (FDropdownRect.width - round(ABuffer.Canvas.Textwidth('u'))) div 2;
+      y := FDropdownRect.bottom - Round(ABuffer.Canvas.Textheight('u')) - LARGEBUTTON_CHEVRON_HMARGIN;
+      DrawR:= RectF(x,y, x + ABuffer.Canvas.TextWidth('u') - 1, y + ABuffer.Canvas.TextHeight('u') - 1);
+      DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+
+
+////   ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
+//    ABuffer.Canvas.Font.Family := 'Marlett';
+//    ABuffer.Canvas.Font.Size := 8;
+//    ABuffer.Canvas.Font.Style := [];
+////   ABuffer.Canvas.Font.Orientation:=0;
+//
+//    x := FDropdownRect.Left + (FDropdownRect.width - round(ABuffer.Canvas.Textwidth('u'))) div 2;
+//    y := FDropdownRect.bottom - Round(ABuffer.Canvas.Textheight('u')) - LARGEBUTTON_CHEVRON_HMARGIN;
+//    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
 
    {$ENDREGION}
   end;
@@ -1718,6 +1763,7 @@ var
   FontColor: TAlphaColor;
   x: Integer;
   y: Integer;
+  DrawR: TRectF;
 begin
   if FToolbarDispatch = nil then
     exit;
@@ -1914,18 +1960,40 @@ begin
       end;
     end;
 
-//   ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
-    ABuffer.Canvas.Font.Family := 'Marlett';
-    ABuffer.Canvas.Font.Size := 8;
-    ABuffer.Canvas.Font.Style := [];
-//   ABuffer.Canvas.Font.Orientation:=0;
+//      if FButtonKind = bkDropdown then
+//      begin
+//        y := Round(FButtonRect.Bottom - ABuffer.Canvas.TextHeight('Tg') - 1);
+//        DrawR := Classes.Rect(FButtonRect.Left, y, FButtonRect.Right, FButtonRect.Bottom);
+//        DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+//      end else
+//      if FButtonKind = bkButtonDropdown then
+//      begin
+//        y := Round(FDropdownRect.Bottom - ABuffer.Canvas.TextHeight('Tg') - 1);
+//        DrawR := Classes.Rect(FDropdownRect.Left, y, FDropDownRect.Right, FDropdownRect.Bottom);
+//        DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+//      end;
 
-    if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
-      x := FDropdownRect.Right - SMALLBUTTON_HALF_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1
-    else
-      x := FDropdownRect.Right - SMALLBUTTON_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1;
-    y := FDropdownRect.top + (FDropdownRect.height - Round(ABuffer.Canvas.Textheight('u'))) div 2;
-    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
+      if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
+        x := FDropdownRect.Right - SMALLBUTTON_HALF_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1
+      else
+        x := FDropdownRect.Right - SMALLBUTTON_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1;
+      y := FDropdownRect.top + (FDropdownRect.height - Round(ABuffer.Canvas.Textheight('u'))) div 2;
+      DrawR:= RectF(x,y, x + ABuffer.Canvas.TextWidth('u') - 1, y + ABuffer.Canvas.TextHeight('u') - 1);
+      DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+
+
+////   ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
+//    ABuffer.Canvas.Font.Family := 'Marlett';
+//    ABuffer.Canvas.Font.Size := 8;
+//    ABuffer.Canvas.Font.Style := [];
+////   ABuffer.Canvas.Font.Orientation:=0;
+//
+//    if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
+//      x := FDropdownRect.Right - SMALLBUTTON_HALF_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1
+//    else
+//      x := FDropdownRect.Right - SMALLBUTTON_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1;
+//    y := FDropdownRect.top + (FDropdownRect.height - Round(ABuffer.Canvas.Textheight('u'))) div 2;
+//    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
    {$ENDREGION}
   end
   else if FButtonKind = bkDropdown then
@@ -1957,18 +2025,40 @@ begin
       end;
     end;
 
-//   ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
-    ABuffer.Canvas.Font.Family := 'Marlett';
-    ABuffer.Canvas.Font.Size := 8;
-    ABuffer.Canvas.Font.Style := [];
-//   ABuffer.Canvas.Font.Orientation:=0;
+//      if FButtonKind = bkDropdown then
+//      begin
+//        y := Round(FButtonRect.Bottom - ABuffer.Canvas.TextHeight('Tg') - 1);
+//        DrawR := Classes.Rect(FButtonRect.Left, y, FButtonRect.Right, FButtonRect.Bottom);
+//        DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+//      end else
+//      if FButtonKind = bkButtonDropdown then
+//      begin
+//        y := Round(FDropdownRect.Bottom - ABuffer.Canvas.TextHeight('Tg') - 1);
+//        DrawR := Classes.Rect(FDropdownRect.Left, y, FDropDownRect.Right, FDropdownRect.Bottom);
+//        DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+//      end;
 
-    if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
-      x := FButtonRect.Right - SMALLBUTTON_HALF_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1
-    else
-      x := FButtonRect.Right - SMALLBUTTON_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1;
-    y := FButtonRect.top + (FButtonRect.height - Round(ABuffer.Canvas.Textheight('u'))) div 2;
-    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
+      if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
+        x := FButtonRect.Right - SMALLBUTTON_HALF_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1
+      else
+        x := FButtonRect.Right - SMALLBUTTON_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1;
+      y := FButtonRect.top + (FButtonRect.height - Round(ABuffer.Canvas.Textheight('u'))) div 2;
+
+      DrawR:= RectF(x,y, x + ABuffer.Canvas.TextWidth('u') - 1, y + ABuffer.Canvas.TextHeight('u') - 1);
+      DrawDropdownArrow(ABuffer, DrawR, fontcolor);
+
+////   ABuffer.Canvas.Font.Charset:=DEFAULT_CHARSET;
+//    ABuffer.Canvas.Font.Family := 'Marlett';
+//    ABuffer.Canvas.Font.Size := 8;
+//    ABuffer.Canvas.Font.Style := [];
+////   ABuffer.Canvas.Font.Orientation:=0;
+//
+//    if FGroupBehaviour in [gbBeginsGroup, gbContinuesGroup] then
+//      x := FButtonRect.Right - SMALLBUTTON_HALF_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1
+//    else
+//      x := FButtonRect.Right - SMALLBUTTON_BORDER_WIDTH - (SMALLBUTTON_DROPDOWN_WIDTH + Round(ABuffer.Canvas.Textwidth('u'))) div 2 + 1;
+//    y := FButtonRect.top + (FButtonRect.height - Round(ABuffer.Canvas.Textheight('u'))) div 2;
+//    TGUITools.DrawText(ABuffer.Canvas, x, y, 'u', FontColor, ClipRect);
   end;
 
 {$ENDREGION}

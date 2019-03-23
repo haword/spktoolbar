@@ -467,7 +467,8 @@ end;
 
 procedure TSpkPane.FreeingItem(AItem: TSpkBaseItem);
 begin
-  FItems.RemoveReference(AItem);
+  if FItems <> nil then
+    FItems.RemoveReference(AItem);
 end;
 
 function TSpkPane.GenerateLayout: TSpkPaneItemsLayout;

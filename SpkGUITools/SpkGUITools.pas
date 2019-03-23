@@ -5,7 +5,7 @@ unit SpkGuiTools;
 interface
 
 uses
-  FMX.Graphics, SysUtils, Math, Classes, FMX.Controls, FMX.ImgList,
+  FMX.Graphics, SysUtils, Math, Classes, FMX.Controls, FMX.ImgList, FMX.StdCtrls,
   SpkGraphTools, SpkMath, FMX.Utils, FMX.Types, System.types, System.UITypes;
 
 type
@@ -14,19 +14,18 @@ type
   TCornerKind = (cpRound, cpNormal);
 
   TBackgroundKind = (bkSolid, bkVerticalGradient, bkHorizontalGradient, bkConcave);
+
   TCheckBoxState = (cbUnchecked, cbChecked, cbGrayed);
+
   TSpkCheckboxStyle = (cbsCheckbox, cbsRadioButton);
 
-  TSpkButtonState = (bsIdle,
-                        bsBtnHottrack, bsBtnPressed,
-                        bsDropdownHottrack, bsDropdownPressed);
+  TSpkButtonState = (bsIdle, bsBtnHottrack, bsBtnPressed, bsDropdownHottrack, bsDropdownPressed);
 
 type
   TGUITools = class(TObject)
   private
   protected
-    class procedure FillGradientRectangle(ACanvas: TCanvas; Rect: T2DIntRect; Radius: Integer; ColorFrom: TAlphaColor; ColorTo: TAlphaColor; GradientKind: TBackgroundKind; Corners: TCorners = [TCorner.TopLeft, TCorner.TopRight,
-    TCorner.BottomLeft, TCorner.BottomRight]);
+    class procedure FillGradientRectangle(ACanvas: TCanvas; Rect: T2DIntRect; Radius: Integer; ColorFrom: TAlphaColor; ColorTo: TAlphaColor; GradientKind: TBackgroundKind; Corners: TCorners = [TCorner.TopLeft, TCorner.TopRight, TCorner.BottomLeft, TCorner.BottomRight]);
 
 //    class procedure SaveClipRgn(DC: HDC; var OrgRgnExists: boolean; var OrgRgn: HRGN);
 //    class procedure RestoreClipRgn(DC: HDC; OrgRgnExists: boolean; var OrgRgn: HRGN);
@@ -63,10 +62,8 @@ type
     // Performance:
     // w/ClipRect:  Bitmap is faster (extremely)
     // wo/ClipRect: Bitmap is faster (extremely)
-    class procedure DrawAARoundFrame(ABitmap: TBitmap; Rect: T2DIntRect; Radius: integer; Color: TAlphaColor; Corners: TCorners = [TCorner.TopLeft, TCorner.TopRight,
-    TCorner.BottomLeft, TCorner.BottomRight]); overload;
-    class procedure DrawAARoundFrame(ABitmap: TBitmap; Rect: T2DIntRect; Radius: integer; Color: TAlphaColor; ClipRect: T2DIntRect; Corners: TCorners = [TCorner.TopLeft, TCorner.TopRight,
-    TCorner.BottomLeft, TCorner.BottomRight]); overload;
+    class procedure DrawAARoundFrame(ABitmap: TBitmap; Rect: T2DIntRect; Radius: integer; Color: TAlphaColor; Corners: TCorners = [TCorner.TopLeft, TCorner.TopRight, TCorner.BottomLeft, TCorner.BottomRight]); overload;
+    class procedure DrawAARoundFrame(ABitmap: TBitmap; Rect: T2DIntRect; Radius: integer; Color: TAlphaColor; ClipRect: T2DIntRect; Corners: TCorners = [TCorner.TopLeft, TCorner.TopRight, TCorner.BottomLeft, TCorner.BottomRight]); overload;
 //    class procedure DrawAARoundFrame(ACanvas: TCanvas; Rect: T2DIntRect; Radius: integer; Color: TAlphaColor); overload;
 //    class procedure DrawAARoundFrame(ACanvas: TCanvas; Rect: T2DIntRect; Radius: integer; Color: TAlphaColor; ClipRect: T2DIntRect); overload;
 
@@ -151,14 +148,10 @@ type
     class procedure DrawRoundRect(ACanvas: TCanvas; Rect: T2DIntRect; Radius: integer; ColorFrom: TAlphaColor; ColorTo: TAlphaColor; GradientKind: TBackgroundKind; ClipRect: T2DIntRect; LeftTopRound: boolean = true; RightTopRound: boolean = true; LeftBottomRound: boolean = true; RightBottomRound: boolean = true); overload;
     class procedure DrawRegion(ACanvas: TCanvas;
 //      Region: HRGN;
-      Region: TRectF;
-      Rect: T2DIntRect; Radius: Integer; ColorFrom: TAlphaColor; ColorTo: TAlphaColor; GradientKind: TBackgroundKind; Corners: TCorners = [TCorner.TopLeft, TCorner.TopRight,
-    TCorner.BottomLeft, TCorner.BottomRight]); overload;
+      Region: TRectF; Rect: T2DIntRect; Radius: Integer; ColorFrom: TAlphaColor; ColorTo: TAlphaColor; GradientKind: TBackgroundKind; Corners: TCorners = [TCorner.TopLeft, TCorner.TopRight, TCorner.BottomLeft, TCorner.BottomRight]); overload;
     class procedure DrawRegion(ACanvas: TCanvas;
 //      Region: HRGN;
-      Region: TRectF;
-      Rect: T2DIntRect; Radius: Integer; ColorFrom: TAlphaColor; ColorTo: TAlphaColor; GradientKind: TBackgroundKind; ClipRect: T2DIntRect; Corners: TCorners = [TCorner.TopLeft, TCorner.TopRight,
-    TCorner.BottomLeft, TCorner.BottomRight]); overload;
+      Region: TRectF; Rect: T2DIntRect; Radius: Integer; ColorFrom: TAlphaColor; ColorTo: TAlphaColor; GradientKind: TBackgroundKind; ClipRect: T2DIntRect; Corners: TCorners = [TCorner.TopLeft, TCorner.TopRight, TCorner.BottomLeft, TCorner.BottomRight]); overload;
 
     // Imagelist tools
     class procedure DrawImage(ABitmap: TBitmap; Imagelist: TImageList; ImageIndex: integer; Point: T2DIntVector); overload;
@@ -169,20 +162,11 @@ type
     class procedure DrawDisabledImage(ABitmap: TBitmap; Imagelist: TImageList; ImageIndex: integer; Point: T2DIntVector; ClipRect: T2DIntRect); overload;
     class procedure DrawDisabledImage(ACanvas: TCanvas; Imagelist: TImageList; ImageIndex: integer; Point: T2DIntVector); overload;
     class procedure DrawDisabledImage(ACanvas: TCanvas; Imagelist: TImageList; ImageIndex: integer; Point: T2DIntVector; ClipRect: T2DIntRect); overload;
+    class procedure DrawCheckbox(ACanvas: TCanvas; Control: TFmxObject; x, y: Integer; AState: TCheckboxState; AButtonState: TSpkButtonState; AStyle: TSpkCheckboxStyle); overload;
+    class procedure DrawCheckbox(ACanvas: TCanvas; Control: TFmxObject; x, y: Integer; AState: TCheckboxState; AButtonState: TSpkButtonState; AStyle: TSpkCheckboxStyle; ClipRect: T2DIntRect); overload;
 
-    class procedure DrawCheckbox(ACanvas: TCanvas;
-                                 x,y: Integer;
-                                 AState: TCheckboxState;
-                                 AButtonState: TSpkButtonState;
-                                 AStyle: TSpkCheckboxStyle); overload;
-    class procedure DrawCheckbox(ACanvas: TCanvas;
-                                 x,y: Integer;
-                                 AState: TCheckboxState;
-                                 AButtonState: TSpkButtonState;
-                                 AStyle: TSpkCheckboxStyle;
-                                 ClipRect: T2DIntRect); overload;
 
-    // Draw tab
+    // Draw tab
     class procedure DrawTab(ABitmap: TBitmap; RoundTab: T2DIntRect; Radius: Integer; Border, ColorFrom, ColorTo: TAlphaColor);
     // Text tools
     class procedure DrawText(ABitmap: TBitmap; x, y: integer; AText: string; TextColor: TAlphaColor); overload;
@@ -202,7 +186,6 @@ type
   end;
 
 implementation
-
 { TSpkGUITools }
 
 //class procedure TGUITools.CopyRoundCorner(ABuffer, ABitmap: TBitmap; SrcPoint,
@@ -224,9 +207,9 @@ implementation
 //
 //begin
 //  if (ABuffer.PixelFormat <>  pf24bit) or (ABitmap.PixelFormat <> pf24bit) then
-//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 24-bitowe bitmapy s¹ akceptowane!');
+//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 24-bitowe bitmapy s? akceptowane!');
 //
-//  // Sprawdzanie poprawnoœci
+//  // Sprawdzanie poprawno?ci
 //  if Radius < 1 then
 //    exit;
 //
@@ -262,7 +245,7 @@ implementation
 //  if not (OrgSrcRect.IntersectsWith(TempRect2, SrcRect)) then
 //    exit;
 //
-//  // Ustalamy pozycjê œrodka ³uku
+//  // Ustalamy pozycj? ?rodka ?uku
 //  case CornerPos of
 //    cpLeftTop: Center := T2DIntVector.create(SrcPoint.x + radius - 1, SrcPoint.y + Radius - 1);
 //    cpRightTop: Center := T2DIntVector.create(SrcPoint.x, SrcPoint.y + Radius - 1);
@@ -321,9 +304,9 @@ implementation
 //
 //begin
 //  if (ABuffer.PixelFormat <> pf24bit) or (ABitmap.PixelFormat <> pf24bit) then
-//    raise exception.create('TSpkGUITools.CopyBackground: Tylko 24-bitowe bitmapy s¹ akceptowane!');
+//    raise exception.create('TSpkGUITools.CopyBackground: Tylko 24-bitowe bitmapy s? akceptowane!');
 //
-//  // Sprawdzamy poprawnoœæ
+//  // Sprawdzamy poprawno??
 //  if Radius < 0 then
 //    exit;
 //
@@ -334,7 +317,7 @@ implementation
 //    (ABitmap.width = 0) or (ABitmap.height = 0) then
 //    exit;
 //
-//  // Góra
+//  // G?ra
 //  CopyRectangle(ABuffer,
 //    ABitmap,
 //    T2DIntPoint.create(SrcPoint.x + radius, SrcPoint.y),
@@ -342,7 +325,7 @@ implementation
 //    width - 2 * radius,
 //    radius,
 //    ClipRect);
-//  // Dó³
+//  // D??
 //  CopyRectangle(ABuffer,
 //    ABitmap,
 //    T2DIntPoint.create(SrcPoint.x + radius, SrcPoint.y + height - radius),
@@ -350,7 +333,7 @@ implementation
 //    width - 2 * radius,
 //    radius,
 //    ClipRect);
-//  // Œrodek
+//  // ?rodek
 //  CopyRectangle(ABuffer,
 //    ABitmap,
 //    T2DIntPoint.create(SrcPoint.x, SrcPoint.y + radius),
@@ -359,7 +342,7 @@ implementation
 //    height - 2 * radius,
 //    ClipRect);
 //
-//  // Wype³niamy naro¿niki
+//  // Wype?niamy naro?niki
 //
 //  if LeftTopRound then
 //    TGUITools.CopyRoundCorner(ABuffer,
@@ -433,9 +416,9 @@ implementation
 //
 //begin
 //  if (ABuffer.PixelFormat <> pf24bit) or (ABitmap.PixelFormat <> pf24bit) then
-//    raise exception.create('TSpkGUITools.CopyBackground: Tylko 24-bitowe bitmapy s¹ akceptowane!');
+//    raise exception.create('TSpkGUITools.CopyBackground: Tylko 24-bitowe bitmapy s? akceptowane!');
 //
-//  // Sprawdzamy poprawnoœæ
+//  // Sprawdzamy poprawno??
 //  if Radius < 0 then
 //    exit;
 //
@@ -446,21 +429,21 @@ implementation
 //    (ABitmap.width = 0) or (ABitmap.height = 0) then
 //    exit;
 //
-//  // Góra
+//  // G?ra
 //  CopyRectangle(ABuffer,
 //    ABitmap,
 //    T2DIntPoint.create(SrcPoint.x + radius, SrcPoint.y),
 //    T2DIntPoint.create(DstPoint.x + radius, DstPoint.y),
 //    width - 2 * radius,
 //    radius);
-//  // Dó³
+//  // D??
 //  CopyRectangle(ABuffer,
 //    ABitmap,
 //    T2DIntPoint.create(SrcPoint.x + radius, SrcPoint.y + height - radius),
 //    T2DIntPoint.create(DstPoint.x + radius, DstPoint.y + height - radius),
 //    width - 2 * radius,
 //    radius);
-//  // Œrodek
+//  // ?rodek
 //  CopyRectangle(ABuffer,
 //    ABitmap,
 //    T2DIntPoint.create(SrcPoint.x, SrcPoint.y + radius),
@@ -539,9 +522,9 @@ implementation
 //
 //begin
 //  if (ABuffer.PixelFormat <> pf24bit) or (ABitmap.PixelFormat <> pf24bit) then
-//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 24-bitowe bitmapy s¹ akceptowane!');
+//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 24-bitowe bitmapy s? akceptowane!');
 //
-//  // Sprawdzanie poprawnoœci
+//  // Sprawdzanie poprawno?ci
 //  if (Width < 1) or (Height < 1) then
 //    exit;
 //
@@ -549,7 +532,7 @@ implementation
 //    (ABitmap.width = 0) or (ABitmap.height = 0) then
 //    exit;
 //
-//  // Przycinamy Ÿród³owy rect do obszaru Ÿród³owej bitmapy
+//  // Przycinamy ?r?d?owy rect do obszaru ?r?d?owej bitmapy
 //  BufferRect := T2DIntRect.create(0, 0, ABuffer.width - 1, ABuffer.height - 1);
 //
 //  if not (BufferRect.IntersectsWith(T2DIntRect.create(SrcPoint.x,
@@ -568,19 +551,19 @@ implementation
 //    DstRect)) then
 //    exit;
 //
-//  // Liczymy offset Ÿród³owego do docelowego recta
+//  // Liczymy offset ?r?d?owego do docelowego recta
 //  //Offset:=DstPoint - SrcPoint;
 //  Offset.x := DstPoint.x - SrcPoint.x;
 //  Offset.y := DstPoint.y - SrcPoint.y;
 //  TempRect2 := T2DIntRect.Create(DstRect.Left - Offset.x, DstRect.Top - Offset.y,
 //    DstRect.Right - Offset.x, DstRect.Bottom - Offset.y);
 //
-//  // Sprawdzamy, czy na³o¿one na siebie recty: Ÿród³owy i docelowy przesuniêty o
-//  // offset maj¹ jak¹œ czêœæ wspóln¹
+//  // Sprawdzamy, czy na?o?one na siebie recty: ?r?d?owy i docelowy przesuni?ty o
+//  // offset maj? jak?? cz??? wsp?ln?
 //  if not (SrcRect.IntersectsWith(TempRect2, ClippedSrcRect)) then
 //    exit;
 //
-//  // Jeœli jest cokolwiek do przetworzenia, wykonaj operacjê
+//  // Je?li jest cokolwiek do przetworzenia, wykonaj operacj?
 //  if (ClippedSrcRect.left <= ClippedSrcRect.right) and (ClippedSrcRect.top <= ClippedSrcRect.bottom) then
 //    for y := ClippedSrcRect.top to ClippedSrcRect.bottom do
 //    begin
@@ -622,12 +605,12 @@ implementation
 //
 //begin
 //  if (ABuffer.PixelFormat <> pf24bit) or (ABitmap.PixelFormat <> pf24bit) then
-//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 24-bitowe bitmapy s¹ akceptowane!');
+//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 24-bitowe bitmapy s? akceptowane!');
 //
 //  if (AMask.PixelFormat <> pf8bit) then
-//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 8-bitowe maski s¹ akceptowane!');
+//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 8-bitowe maski s? akceptowane!');
 //
-//  // Sprawdzanie poprawnoœci
+//  // Sprawdzanie poprawno?ci
 //  if (Width < 1) or (Height < 1) then
 //    exit;
 //
@@ -639,7 +622,7 @@ implementation
 //    (ABuffer.Height <> AMask.Height) then
 //    exit;
 //
-//  // Przycinamy Ÿród³owy rect do obszaru Ÿród³owej bitmapy
+//  // Przycinamy ?r?d?owy rect do obszaru ?r?d?owej bitmapy
 //  BufferRect := T2DIntRect.create(0, 0, ABuffer.width - 1, ABuffer.height - 1);
 //
 //  if not (BufferRect.IntersectsWith(T2DIntRect.create(SrcPoint.x,
@@ -658,7 +641,7 @@ implementation
 //    DstRect)) then
 //    exit;
 //
-//  // Liczymy offset Ÿród³owego do docelowego recta
+//  // Liczymy offset ?r?d?owego do docelowego recta
 //  //Offset:=DstPoint - SrcPoint;
 //
 //  Offset.x := DstPoint.x - SrcPoint.x;
@@ -666,12 +649,12 @@ implementation
 //  TempRect2 := T2DIntRect.Create(DstRect.Left - Offset.x, DstRect.Top - Offset.y,
 //    DstRect.Right - Offset.x, DstRect.Bottom - Offset.y);
 //
-//  // Sprawdzamy, czy na³o¿one na siebie recty: Ÿród³owy i docelowy przesuniêty o
-//  // offset maj¹ jak¹œ czêœæ wspóln¹
+//  // Sprawdzamy, czy na?o?one na siebie recty: ?r?d?owy i docelowy przesuni?ty o
+//  // offset maj? jak?? cz??? wsp?ln?
 //  if not (SrcRect.IntersectsWith(TempRect2, ClippedSrcRect)) then
 //    exit;
 //
-//  // Jeœli jest cokolwiek do przetworzenia, wykonaj operacjê
+//  // Je?li jest cokolwiek do przetworzenia, wykonaj operacj?
 //  if (ClippedSrcRect.left <= ClippedSrcRect.right) and (ClippedSrcRect.top <= ClippedSrcRect.bottom) then
 //    for y := ClippedSrcRect.top to ClippedSrcRect.bottom do
 //    begin
@@ -713,11 +696,11 @@ implementation
 //
 //begin
 //  if (ABuffer.PixelFormat <> pf24bit) or (ABitmap.PixelFormat <> pf24bit) then
-//    raise exception.create('TSpkGUITools.CopyMaskRectangle: Tylko 24-bitowe bitmapy s¹ akceptowane!');
+//    raise exception.create('TSpkGUITools.CopyMaskRectangle: Tylko 24-bitowe bitmapy s? akceptowane!');
 //  if AMask.PixelFormat <> pf8bit then
-//    raise exception.create('TSpkGUITools.CopyMaskRectangle: Tylko 8-bitowe maski s¹ akceptowane!');
+//    raise exception.create('TSpkGUITools.CopyMaskRectangle: Tylko 8-bitowe maski s? akceptowane!');
 //
-//  // Sprawdzanie poprawnoœci
+//  // Sprawdzanie poprawno?ci
 //  if (Width < 1) or (Height < 1) then
 //    exit;
 //
@@ -727,9 +710,9 @@ implementation
 //
 //  if (ABuffer.Width <> AMask.Width) or
 //    (ABuffer.Height <> AMask.Height) then
-//    raise exception.create('TSpkGUITools.CopyMaskRectangle: Maska ma nieprawid³owe rozmiary!');
+//    raise exception.create('TSpkGUITools.CopyMaskRectangle: Maska ma nieprawid?owe rozmiary!');
 //
-//  // Przycinamy Ÿród³owy rect do obszaru Ÿród³owej bitmapy
+//  // Przycinamy ?r?d?owy rect do obszaru ?r?d?owej bitmapy
 //  BufferRect := T2DIntRect.create(0, 0, ABuffer.width - 1, ABuffer.height - 1);
 //  if not (BufferRect.IntersectsWith(T2DIntRect.create(SrcPoint.x,
 //    SrcPoint.y,
@@ -751,19 +734,19 @@ implementation
 //  if not (DstRect.IntersectsWith(ClipRect, ClippedDstRect)) then
 //    Exit;
 //
-//  // Liczymy offset Ÿród³owego do docelowego recta
+//  // Liczymy offset ?r?d?owego do docelowego recta
 //  //Offset:=DstPoint - SrcPoint;
 //  Offset.x := DstPoint.x - SrcPoint.x;
 //  Offset.y := DstPoint.y - SrcPoint.y;
 //  TempRect2 := T2DIntRect.Create(DstRect.Left - Offset.x, DstRect.Top - Offset.y,
 //    DstRect.Right - Offset.x, DstRect.Bottom - Offset.y);
 //
-//  // Sprawdzamy, czy na³o¿one na siebie recty: Ÿród³owy i docelowy przesuniêty o
-//  // offset maj¹ jak¹œ czêœæ wspóln¹
+//  // Sprawdzamy, czy na?o?one na siebie recty: ?r?d?owy i docelowy przesuni?ty o
+//  // offset maj? jak?? cz??? wsp?ln?
 //  if not (SrcRect.IntersectsWith(TempRect2, ClippedSrcRect)) then
 //    exit;
 //
-//  // Jeœli jest cokolwiek do przetworzenia, wykonaj operacjê
+//  // Je?li jest cokolwiek do przetworzenia, wykonaj operacj?
 //  if (ClippedSrcRect.left <= ClippedSrcRect.right) and (ClippedSrcRect.top <= ClippedSrcRect.bottom) then
 //    for y := ClippedSrcRect.top to ClippedSrcRect.bottom do
 //    begin
@@ -802,9 +785,9 @@ implementation
 //
 //begin
 //  if (ABuffer.PixelFormat <> pf24bit) or (ABitmap.PixelFormat <> pf24bit) then
-//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 24-bitowe bitmapy s¹ akceptowane!');
+//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 24-bitowe bitmapy s? akceptowane!');
 //
-//  // Sprawdzanie poprawnoœci
+//  // Sprawdzanie poprawno?ci
 //  if (Width < 1) or (Height < 1) then
 //    exit;
 //
@@ -812,7 +795,7 @@ implementation
 //    (ABitmap.width = 0) or (ABitmap.height = 0) then
 //    exit;
 //
-//  // Przycinamy Ÿród³owy rect do obszaru Ÿród³owej bitmapy
+//  // Przycinamy ?r?d?owy rect do obszaru ?r?d?owej bitmapy
 //  BufferRect := T2DIntRect.create(0, 0, ABuffer.width - 1, ABuffer.height - 1);
 //  if not (BufferRect.IntersectsWith(T2DIntRect.create(SrcPoint.x,
 //    SrcPoint.y,
@@ -834,19 +817,19 @@ implementation
 //  if not (DstRect.IntersectsWith(ClipRect, ClippedDstRect)) then
 //    Exit;
 //
-//  // Liczymy offset Ÿród³owego do docelowego recta
+//  // Liczymy offset ?r?d?owego do docelowego recta
 //  //Offset:=DstPoint - SrcPoint;
 //  Offset.x := DstPoint.x - SrcPoint.x;
 //  Offset.y := DstPoint.y - SrcPoint.y;
 //  TempRect2 := T2DIntRect.Create(DstRect.Left - Offset.x, DstRect.Top - Offset.y,
 //    DstRect.Right - Offset.x, DstRect.Bottom - Offset.y);
 //
-//  // Sprawdzamy, czy na³o¿one na siebie recty: Ÿród³owy i docelowy przesuniêty o
-//  // offset maj¹ jak¹œ czêœæ wspóln¹
+//  // Sprawdzamy, czy na?o?one na siebie recty: ?r?d?owy i docelowy przesuni?ty o
+//  // offset maj? jak?? cz??? wsp?ln?
 //  if not (SrcRect.IntersectsWith(TempRect2, ClippedSrcRect)) then
 //    exit;
 //
-//  // Jeœli jest cokolwiek do przetworzenia, wykonaj operacjê
+//  // Je?li jest cokolwiek do przetworzenia, wykonaj operacj?
 //  if (ClippedSrcRect.left <= ClippedSrcRect.right) and (ClippedSrcRect.top <= ClippedSrcRect.bottom) then
 //    for y := ClippedSrcRect.top to ClippedSrcRect.bottom do
 //    begin
@@ -878,9 +861,9 @@ implementation
 //
 //begin
 //  if (ABuffer.PixelFormat <> pf24bit) or (ABitmap.PixelFormat <> pf24bit) then
-//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 24-bitowe bitmapy s¹ akceptowane!');
+//    raise exception.create('TSpkGUITools.CopyRoundCorner: Tylko 24-bitowe bitmapy s? akceptowane!');
 //
-//  // Sprawdzanie poprawnoœci
+//  // Sprawdzanie poprawno?ci
 //  if Radius < 1 then
 //    exit;
 //
@@ -913,7 +896,7 @@ implementation
 //  if not (OrgSrcRect.IntersectsWith(TempRect2, SrcRect)) then
 //    exit;
 //
-//  // Ustalamy pozycjê œrodka ³uku
+//  // Ustalamy pozycj? ?rodka ?uku
 //
 //  case CornerPos of
 //    cpLeftTop: Center := T2DIntVector.create(SrcPoint.x + radius - 1, SrcPoint.y + Radius - 1);
@@ -982,12 +965,11 @@ var
   p: PAlphaColorArray;
   tmpcolor: TAlphaColor;
   sta, swa: Single;
-
 begin
 //  if ABitmap.PixelFormat <> pf24bit then
-//    raise exception.create('TSpkGUITools.DrawAARoundCorner: Bitmapa musi byæ w trybie 24-bitowym!');
+//    raise exception.create('TSpkGUITools.DrawAARoundCorner: Bitmapa musi by? w trybie 24-bitowym!');
 
-  // Sprawdzamy poprawnoœæ
+  // Sprawdzamy poprawno??
 //  Exit;
 
   if Radius < 1 then
@@ -995,58 +977,57 @@ begin
   if (ABitmap.width = 0) or (ABitmap.height = 0) then
     exit;
 
-  // ród³owy rect...
+  // ?r?d?owy rect...
   OrgCornerRect := T2DIntRect.create(Point.x, Point.y, Point.x + Radius - 1, Point.y + Radius - 1);
 
-  // ...przycinamy do rozmiarów bitmapy
+  // ...przycinamy do rozmiar?w bitmapy
   BitmapRect := T2DIntRect.create(0, 0, ABitmap.width - 1, ABitmap.height - 1);
   if not (BitmapRect.intersectsWith(OrgCornerRect, CornerRect)) then
     exit;
 
-  // Jeœli nie ma czego rysowaæ, wychodzimy
+  // Je?li nie ma czego rysowa?, wychodzimy
   if (CornerRect.left > CornerRect.right) or (CornerRect.top > CornerRect.bottom) then
     exit;
 
   case CornerPos of
     cpLeftTop:
-    begin
-      Center := PointF(Point.x + Radius , Point.y + Radius );
-      Center.Offset(0.5,0.5);
-      sta:= 180;
-      swa:=90;
-    end;
+      begin
+        Center := PointF(Point.x + Radius, Point.y + Radius);
+        Center.Offset(0.5, 0.5);
+        sta := 180;
+        swa := 90;
+      end;
     cpRightTop:
-    begin
-      Center := PointF(Point.x - 1, Point.y + Radius );
-      Center.Offset(0.5,0.5);
-      sta:= -90;
-      swa:=90;
-    end;
+      begin
+        Center := PointF(Point.x - 1, Point.y + Radius);
+        Center.Offset(0.5, 0.5);
+        sta := -90;
+        swa := 90;
+      end;
     cpLeftBottom:
-    begin
-      Center := PointF(Point.x + Radius , Point.y-1);
-      Center.Offset(0.5,0.5);
-      sta:= 90;
-      swa:=90;
-    end;
+      begin
+        Center := PointF(Point.x + Radius, Point.y - 1);
+        Center.Offset(0.5, 0.5);
+        sta := 90;
+        swa := 90;
+      end;
     cpRightBottom:
-    begin
-      Center := PointF(Point.x-1, Point.y-1);
-      Center.Offset(0.5,0.5);
-      sta:= 0;
-      swa:=90;
-    end;
+      begin
+        Center := PointF(Point.x - 1, Point.y - 1);
+        Center.Offset(0.5, 0.5);
+        sta := 0;
+        swa := 90;
+      end;
   end;
 
-
   ABitmap.Canvas.BeginScene();
-  ABitmap.Canvas.Stroke.Color:=Color;
-  ABitmap.Canvas.Stroke.Kind:= TBrushKind.Solid;
-  ABitmap.Canvas.DrawArc(PointF(Center.x, Center.y), PointF(Radius, Radius), sta, swa,1);
+  ABitmap.Canvas.Stroke.Color := Color;
+  ABitmap.Canvas.Stroke.Kind := TBrushKind.Solid;
+  ABitmap.Canvas.DrawArc(PointF(Center.x, Center.y), PointF(Radius, Radius), sta, swa, 1);
   ABitmap.Canvas.EndScene;
 
 
-//  // Szukamy œrodka ³uku - zale¿nie od rodzaju naro¿nika
+//  // Szukamy ?rodka ?uku - zale?nie od rodzaju naro?nika
 //  case CornerPos of
 //    cpLeftTop:
 //      Center := T2DIntVector.create(Point.x + Radius - 1, Point.y + Radius - 1);
@@ -1106,12 +1087,11 @@ var
   p: PAlphaColorArray;
   tmpcolor: TAlphaColor;
   sta, swa: Single;
-
 begin
 //  if ABitmap.PixelFormat <> pf24bit then
-//    raise exception.create('TSpkGUITools.DrawAARoundCorner: Bitmapa musi byæ w trybie 24-bitowym!');
+//    raise exception.create('TSpkGUITools.DrawAARoundCorner: Bitmapa musi by? w trybie 24-bitowym!');
 
-  // Sprawdzamy poprawnoœæ
+  // Sprawdzamy poprawno??
 //  Exit;
   if Radius < 1 then
     exit;
@@ -1119,10 +1099,10 @@ begin
     exit;
 
   //Radius:= Radius div 2;
-  // ród³owy rect...
+  // ?r?d?owy rect...
   OrgCornerRect := T2DIntRect.create(Point.x, Point.y, Point.x + Radius - 1, Point.y + Radius - 1);
 
-  // ...przycinamy do rozmiarów bitmapy
+  // ...przycinamy do rozmiar?w bitmapy
   BitmapRect := T2DIntRect.create(0, 0, ABitmap.width - 1, ABitmap.height - 1);
   if not (BitmapRect.intersectsWith(OrgCornerRect, UnClippedCornerRect)) then
     exit;
@@ -1131,48 +1111,47 @@ begin
   if not (UnClippedCornerRect.IntersectsWith(ClipRect, CornerRect)) then
     exit;
 
-  // Jeœli nie ma czego rysowaæ, wychodzimy
+  // Je?li nie ma czego rysowa?, wychodzimy
   if (CornerRect.left > CornerRect.right) or (CornerRect.top > CornerRect.bottom) then
     exit;
 
-  // Szukamy œrodka ³uku - zale¿nie od rodzaju naro¿nika
+  // Szukamy ?rodka ?uku - zale?nie od rodzaju naro?nika
 
   case CornerPos of
     cpLeftTop:
-    begin
-      Center := PointF(Point.x + Radius , Point.y + Radius );
-      Center.Offset(0.5,0.5);
-      sta:= 180;
-      swa:=90;
-    end;
+      begin
+        Center := PointF(Point.x + Radius, Point.y + Radius);
+        Center.Offset(0.5, 0.5);
+        sta := 180;
+        swa := 90;
+      end;
     cpRightTop:
-    begin
-      Center := PointF(Point.x - 1, Point.y + Radius );
-      Center.Offset(0.5,0.5);
-      sta:= -90;
-      swa:=90;
-    end;
+      begin
+        Center := PointF(Point.x - 1, Point.y + Radius);
+        Center.Offset(0.5, 0.5);
+        sta := -90;
+        swa := 90;
+      end;
     cpLeftBottom:
-    begin
-      Center := PointF(Point.x + Radius , Point.y-1);
-      Center.Offset(0.5,0.5);
-      sta:= 90;
-      swa:=90;
-    end;
+      begin
+        Center := PointF(Point.x + Radius, Point.y - 1);
+        Center.Offset(0.5, 0.5);
+        sta := 90;
+        swa := 90;
+      end;
     cpRightBottom:
-    begin
-      Center := PointF(Point.x-1, Point.y-1);
-      Center.Offset(0.5,0.5);
-      sta:= 0;
-      swa:=90;
-    end;
+      begin
+        Center := PointF(Point.x - 1, Point.y - 1);
+        Center.Offset(0.5, 0.5);
+        sta := 0;
+        swa := 90;
+      end;
   end;
 
-
   ABitmap.Canvas.BeginScene();
-  ABitmap.Canvas.Stroke.Color:=Color;
-  ABitmap.Canvas.Stroke.Kind:= TBrushKind.Solid;
-  ABitmap.Canvas.DrawArc(PointF(Center.x, Center.y), PointF(Radius, Radius), sta, swa,1);
+  ABitmap.Canvas.Stroke.Color := Color;
+  ABitmap.Canvas.Stroke.Kind := TBrushKind.Solid;
+  ABitmap.Canvas.DrawArc(PointF(Center.x, Center.y), PointF(Radius, Radius), sta, swa, 1);
   ABitmap.Canvas.EndScene;
 
 //  Color := ColorToRGB(Color);
@@ -1216,14 +1195,14 @@ end;
 //  RadiusDist: double;
 //  CornerRect: T2DIntRect;
 //begin
-//  // Sprawdzamy poprawnoœæ
+//  // Sprawdzamy poprawno??
 //  if Radius < 1 then
 //    exit;
 //
-//  // ród³owy rect...
+//  // ?r?d?owy rect...
 //  CornerRect := T2DIntRect.create(Point.x, Point.y, Point.x + Radius - 1, Point.y + Radius - 1);
 //
-//  // Szukamy œrodka ³uku - zale¿nie od rodzaju naro¿nika
+//  // Szukamy ?rodka ?uku - zale?nie od rodzaju naro?nika
 //  case CornerPos of
 //    cpLeftTop:
 //      Center := T2DIntVector.create(Point.x + Radius - 1, Point.y + Radius - 1);
@@ -1256,7 +1235,7 @@ end;
 //  ClipRgn: HRGN;
 //  OrgRgn: HRGN;
 //begin
-//  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+//  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
 //  SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 //
 //  ClipRgn := CreateRectRgn(ClipRect.left, ClipRect.Top, ClipRect.Right + 1, ClipRect.Bottom + 1);
@@ -1267,18 +1246,18 @@ end;
 //
 //  DrawAARoundCorner(ACanvas, Point, Radius, CornerPos, Color);
 //
-//  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych regionów
+//  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych region?w
 //  RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 //  DeleteObject(ClipRgn);
 //end;
 
-class procedure TGUITools.DrawAARoundFrame(ABitmap: TBitmap; Rect: T2DIntRect; Radius: integer; Color: TAlphaColor; ClipRect: T2DIntRect; Corners: TCorners );
+class procedure TGUITools.DrawAARoundFrame(ABitmap: TBitmap; Rect: T2DIntRect; Radius: integer; Color: TAlphaColor; ClipRect: T2DIntRect; Corners: TCorners);
 var
- r: TRectF;
- ss: TCanvasSaveState;
+  r: TRectF;
+  ss: TCanvasSaveState;
 begin
 //  if ABitmap.PixelFormat <> pf24bit then
-//    raise exception.create('TGUITools.DrawAARoundFrame: Bitmapa musi byæ w trybie 24-bitowym!');
+//    raise exception.create('TGUITools.DrawAARoundFrame: Bitmapa musi by? w trybie 24-bitowym!');
 
 //  if (Radius < 1) then
 //    exit;
@@ -1288,13 +1267,13 @@ begin
 
   ABitmap.Canvas.BeginScene();
   try
-    ss:=ABitmap.Canvas.SaveState;
+    ss := ABitmap.Canvas.SaveState;
     ABitmap.Canvas.IntersectClipRect(ClipRect.ForWinAPI);
-    ABitmap.Canvas.Stroke.Color:= Color;
-    r:= Rect.ForWinAPI;
-    r.Inflate(-0.5,-0.5);
-    ABitmap.Canvas.Stroke.Kind:= TBrushKind.Solid;
-    ABitmap.Canvas.DrawRect(r, Radius, Radius, Corners,1);
+    ABitmap.Canvas.Stroke.Color := Color;
+    r := Rect.ForWinAPI;
+    r.Inflate(-0.5, -0.5);
+    ABitmap.Canvas.Stroke.Kind := TBrushKind.Solid;
+    ABitmap.Canvas.DrawRect(r, Radius, Radius, Corners, 1);
   finally
     ABitmap.Canvas.RestoreState(ss);
     ABitmap.Canvas.EndScene;
@@ -1308,7 +1287,7 @@ begin
 //  ABitmap.Canvas.Stroke.Color := Color;
 //  ABitmap.Canvas.Stroke.Kind := TBrushKind.Solid;
 //
-//  // Draw*Line s¹ zabezpieczone przed rysowaniem poza obszarem
+//  // Draw*Line s? zabezpieczone przed rysowaniem poza obszarem
 //  DrawVLine(ABitmap, Rect.left, Rect.top + Radius, Rect.bottom - Radius, Color, ClipRect);
 //  DrawVLine(ABitmap, Rect.right, Rect.top + Radius, Rect.bottom - Radius, Color, ClipRect);
 //  DrawHLine(ABitmap, Rect.left + Radius, Rect.right - Radius, Rect.top, Color, ClipRect);
@@ -1321,7 +1300,7 @@ var
   r: TRectF;
 begin
 //  if ABitmap.PixelFormat <> pf24bit then
-//    raise exception.create('TGUITools.DrawAARoundFrame: Bitmapa musi byæ w trybie 24-bitowym!');
+//    raise exception.create('TGUITools.DrawAARoundFrame: Bitmapa musi by? w trybie 24-bitowym!');
 
 //  if (Radius < 1) then
 //    exit;
@@ -1330,11 +1309,11 @@ begin
     exit;
 
   ABitmap.Canvas.BeginScene();
-  ABitmap.Canvas.Stroke.Color:= Color;
-  r:= Rect.ForWinAPI;
-  r.Inflate(-0.5,-0.5);
-  ABitmap.Canvas.Stroke.Kind:= TBrushKind.Solid;
-  ABitmap.Canvas.DrawRect(r, Radius, Radius, Corners,1);
+  ABitmap.Canvas.Stroke.Color := Color;
+  r := Rect.ForWinAPI;
+  r.Inflate(-0.5, -0.5);
+  ABitmap.Canvas.Stroke.Kind := TBrushKind.Solid;
+  ABitmap.Canvas.DrawRect(r, Radius, Radius, Corners, 1);
   ABitmap.Canvas.EndScene;
 
 
@@ -1347,7 +1326,7 @@ begin
 //  ABitmap.canvas.Stroke.color := Color;
 //  ABitmap.canvas.Stroke.Kind := TBrushKind.Solid;
 //
-//  // Draw*Line s¹ zabezpieczone przed rysowaniem poza obszarem
+//  // Draw*Line s? zabezpieczone przed rysowaniem poza obszarem
 //  DrawVLine(ABitmap, Rect.left, Rect.top + Radius, Rect.bottom - Radius, Color);
 //  DrawVLine(ABitmap, Rect.right, Rect.top + Radius, Rect.bottom - Radius, Color);
 //  DrawHLine(ABitmap, Rect.left + Radius, Rect.right - Radius, Rect.top, Color);
@@ -1363,7 +1342,7 @@ begin
   begin
     s := AText;
     tw := TextWidth(s);
-    // Jeœli tekst siê zmieœci, rysujemy
+    // Je?li tekst si? zmie?ci, rysujemy
     if tw <= (x2 - x1 + 1) then
       case Align of
         taLeftJustify:
@@ -1408,9 +1387,9 @@ begin
     ps := PointF(x1, y);
     pe := PointF(x2 + 1, y);
     ps := ACanvas.AlignToPixel(ps);
-    ps.Offset(0.5,0.5);
+    ps.Offset(0.5, 0.5);
     pe := ACanvas.AlignToPixel(pe);
-    pe.Offset(0.5,0.5);
+    pe.Offset(0.5, 0.5);
     ACanvas.DrawLine(ps, pe, 1);
     ACanvas.EndScene;
   finally
@@ -1424,7 +1403,7 @@ var
   ClipRgn: TRectF;
   ss: TCanvasSaveState;
 begin
-  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
 
   ss := ACanvas.SaveState;
   try
@@ -1460,7 +1439,7 @@ var
   ImRect, DestRect: TRectF;
   ss: TCanvasSaveState;
 begin
-  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
   ss := ACanvas.SaveState;
   try
     ClipRgn := RectF(ClipRect.left, ClipRect.Top, ClipRect.Right + 1, ClipRect.Bottom + 1);
@@ -1486,7 +1465,7 @@ var
   ClipRgn: TRectF;
   ss: TCanvasSaveState;
 begin
-  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
   ss := ACanvas.SaveState;
   try
     ClipRgn := RectF(ClipRect.left, ClipRect.Top, ClipRect.Right + 1, ClipRect.Bottom + 1);
@@ -1533,7 +1512,7 @@ begin
   begin
     if MarkPos > 1 then
     begin
-      // Rysowanie tekstu przed wyró¿nionym
+      // Rysowanie tekstu przed wyr??nionym
       ACanvas.Font.Style := ACanvas.Font.Style - [TFontStyle.fsBold];
       s := copy(DrawText, 1, MarkPos - 1);
 
@@ -1544,7 +1523,7 @@ begin
       delete(BaseText, 1, MarkPos - 1);
     end;
 
-    // Rysowanie wyró¿nionego tekstu
+    // Rysowanie wyr??nionego tekstu
     ACanvas.Font.Style := ACanvas.Font.Style + [TFontStyle.fsBold];
     s := copy(DrawText, 1, MarkTextLength);
 
@@ -1632,7 +1611,7 @@ var
   ps, pe: TPointF;
 begin
 //  if ABitmap.PixelFormat <> pf24bit then
-//    raise exception.create('TGUITools.DrawHLine: Bitmapa musi byæ w trybie 24-bitowym!');
+//    raise exception.create('TGUITools.DrawHLine: Bitmapa musi by? w trybie 24-bitowym!');
 
   if x2 < x1 then
   begin
@@ -1652,9 +1631,9 @@ begin
     ps := PointF(LineRect.left, LineRect.Top);
     pe := PointF(LineRect.right + 1, LineRect.top);
     ps := ABitmap.Canvas.AlignToPixel(ps);
-    ps.Offset(0.5,0.5);
+    ps.Offset(0.5, 0.5);
     pe := ABitmap.Canvas.AlignToPixel(pe);
-    pe.Offset(0.5,0.5);
+    pe.Offset(0.5, 0.5);
 
     ABitmap.canvas.DrawLine(ps, pe, 1);
   finally
@@ -1672,7 +1651,7 @@ var
   ps, pe: TPointF;
 begin
 //  if ABitmap.PixelFormat <> pf24bit then
-//    raise exception.create('TGUITools.DrawHLine: Bitmapa musi byæ w trybie 24-bitowym!');
+//    raise exception.create('TGUITools.DrawHLine: Bitmapa musi by? w trybie 24-bitowym!');
 
   if x2 < x1 then
   begin
@@ -1696,9 +1675,9 @@ begin
     ps := PointF(LineRect.left, LineRect.Top);
     pe := PointF(LineRect.right + 1, LineRect.top);
     ps := ABitmap.Canvas.AlignToPixel(ps);
-    ps.Offset(0.5,0.5);
+    ps.Offset(0.5, 0.5);
     pe := ABitmap.Canvas.AlignToPixel(pe);
-    pe.Offset(0.5,0.5);
+    pe.Offset(0.5, 0.5);
     ABitmap.canvas.DrawLine(ps, pe, 1);
   finally
     ABitmap.canvas.EndScene;
@@ -1742,7 +1721,7 @@ var
 //  OrgRgn: HRGN;
   ss: TCanvasSaveState;
 begin
-  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
 //  SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 //  SelectClipRgn(ACanvas.Handle, Region);
   ACanvas.BeginScene();
@@ -1765,7 +1744,7 @@ var
 //  ClipRgn: HRGN;
 //  OrgRgn: HRGN;
 begin
-  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
 //  SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 
 //  ClipRgn := CreateRectRgn(ClipRect.left, ClipRect.Top, ClipRect.Right + 1, ClipRect.Bottom + 1);
@@ -1776,7 +1755,7 @@ begin
 
   DrawRegion(ACanvas, Region, Rect, Radius, ColorFrom, ColorTo, GradientKind);
 
-  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych regionów
+  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych region?w
 //  RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 //  DeleteObject(ClipRgn);
 end;
@@ -1789,7 +1768,7 @@ var
   ClipRgn: TRectF;
   ss: TCanvasSaveState;
 begin
-  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
 //  SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 
   ClipRgn := RectF(ClipRect.left, ClipRect.Top, ClipRect.Right + 1, ClipRect.Bottom + 1);
@@ -1800,7 +1779,7 @@ begin
 
     DrawRoundRect(ACanvas, Rect, Radius, ColorFrom, ColorTo, GradientKind, LeftTopRound, RightTopRound, LeftBottomRound, RightBottomRound);
 
-  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych regionów
+  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych region?w
   finally
     ACanvas.RestoreState(ss);
   end;
@@ -1816,52 +1795,49 @@ begin
   end;
 end;
 
-class procedure TGUITools.DrawTab(ABitmap: TBitmap; RoundTab: T2DIntRect;
-  Radius: Integer; Border, ColorFrom, ColorTo: TAlphaColor);
+class procedure TGUITools.DrawTab(ABitmap: TBitmap; RoundTab: T2DIntRect; Radius: Integer; Border, ColorFrom, ColorTo: TAlphaColor);
 var
-      pd: TPathData;
-      stp: TPointF;
-      fill: TBrush;
-
+  pd: TPathData;
+  stp: TPointF;
+  fill: TBrush;
 begin
-        pd := TPathData.Create;
-        stp:= PointF(RoundTab.Left, RoundTab.Bottom-Radius);
-        stp.Offset(0.5,0.5);
-        pd.AddArc(stp,PointF(Radius,Radius),90,-90);
-        stp.Offset(Radius,0);
+  pd := TPathData.Create;
+  stp := PointF(RoundTab.Left, RoundTab.Bottom - Radius);
+  stp.Offset(0.5, 0.5);
+  pd.AddArc(stp, PointF(Radius, Radius), 90, -90);
+  stp.Offset(Radius, 0);
         //pd.MoveTo(stp);
-        stp.Offset(0, - (RoundTab.Height - (Radius*2)-1));
-        pd.LineTo(stp);
-        stp.Offset(Radius,0);
-        pd.AddArc(stp,PointF(Radius,Radius),-180,90);
-        stp.Offset(0, -Radius);
+  stp.Offset(0, -(RoundTab.Height - (Radius * 2) - 1));
+  pd.LineTo(stp);
+  stp.Offset(Radius, 0);
+  pd.AddArc(stp, PointF(Radius, Radius), -180, 90);
+  stp.Offset(0, -Radius);
         //pd.MoveTo(stp);
-        stp.Offset(RoundTab.Width -(Radius*4),0);
-        pd.LineTo(stp);
-        stp.Offset(0, Radius);
-        pd.AddArc(stp,PointF(Radius,Radius),-90,90);
-        stp.Offset(Radius,0);
+  stp.Offset(RoundTab.Width - (Radius * 4), 0);
+  pd.LineTo(stp);
+  stp.Offset(0, Radius);
+  pd.AddArc(stp, PointF(Radius, Radius), -90, 90);
+  stp.Offset(Radius, 0);
         //pd.MoveTo(stp);
-        stp.Offset(0,(RoundTab.Height - (Radius*2)-1));
-        pd.LineTo(stp);
-        stp.Offset(Radius,0);
-        pd.AddArc(stp,PointF(Radius,Radius),-180,-90);
-        stp.Offset(0,Radius);
+  stp.Offset(0, (RoundTab.Height - (Radius * 2) - 1));
+  pd.LineTo(stp);
+  stp.Offset(Radius, 0);
+  pd.AddArc(stp, PointF(Radius, Radius), -180, -90);
+  stp.Offset(0, Radius);
         //pd.MoveTo(stp);
-        stp.Offset(-RoundTab.Width,0);
+  stp.Offset(-RoundTab.Width, 0);
         //pd.LineTo(stp);
-        fill := TBrush.Create(TBrushKind.Gradient, TAlphaCOlorRec.Blue);
+  fill := TBrush.Create(TBrushKind.Gradient, TAlphaCOlorRec.Blue);
 
-
-        ABitmap.Canvas.BeginScene();
-        ABitmap.Canvas.Stroke.Kind:= TBrushKind.Solid;
-        ABitmap.Canvas.Stroke.Color:= Border;
-        Fill.Color:=ColorFrom;
-        Fill.Gradient.Color:= ColorFrom;
-        Fill.Gradient.Color1:= ColorTo;
-        ABitmap.Canvas.FillPath(pd,1,fill);
-        ABitmap.Canvas.DrawPath(pd, 1);
-        ABitmap.Canvas.EndScene;
+  ABitmap.Canvas.BeginScene();
+  ABitmap.Canvas.Stroke.Kind := TBrushKind.Solid;
+  ABitmap.Canvas.Stroke.Color := Border;
+  fill.Color := ColorFrom;
+  fill.Gradient.Color := ColorFrom;
+  fill.Gradient.Color1 := ColorTo;
+  ABitmap.Canvas.FillPath(pd, 1, fill);
+  ABitmap.Canvas.DrawPath(pd, 1);
+  ABitmap.Canvas.EndScene;
 
 end;
 
@@ -1877,8 +1853,8 @@ begin
     //ACanvas.IntersectClipRect(WinAPIClipRect);
     with ACanvas do
     begin
-      Fill.Kind := TBrushKind.None;
-      Fill.color := TextColor;
+      fill.Kind := TBrushKind.None;
+      fill.color := TextColor;
       TTextTools.TextOut(ACanvas, x, y, AText);
     end;
   finally
@@ -1899,7 +1875,7 @@ begin
   if (Radius * 2 > Rect.width) or (Radius * 2 > Rect.height) then
     exit;
 
-  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
   ss := ACanvas.SaveState;
   try
 
@@ -1910,7 +1886,7 @@ begin
     else
     begin
       RoundRgn := RectF(Rect.Left, Rect.Top, Rect.Right + 2, Rect.Bottom + 2);
-// íåò ðåãèîíà ñ çàêðóãëåíèåì
+// ??? ??????? ? ????????????
 //    RoundRgn := CreateRoundRectRgn(Rect.Left, Rect.Top, Rect.Right + 2, Rect.Bottom + 2, Radius * 2, Radius * 2);
 
       if not (LeftTopRound) then
@@ -1951,7 +1927,7 @@ begin
     FillGradientRectangle(ACanvas, Rect, Radius, ColorFrom, ColorTo, GradientKind);
     ACanvas.EndScene;
 
-  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych regionów
+  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych region?w
 //  RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 //  DeleteObject(RoundRgn);
   finally
@@ -1982,8 +1958,8 @@ begin
   WinAPIClipRect := ClipRect.ForWinAPI;
   with ABitmap.canvas do
   begin
-    Fill.Kind := TBrushKind.None;
-    Fill.color := TextColor;
+    fill.Kind := TBrushKind.None;
+    fill.color := TextColor;
     TTextTools.TextRect(ABitmap.Canvas, WinAPIClipRect, x, y, AText);
   end;
 end;
@@ -1997,7 +1973,7 @@ begin
   begin
     s := AText;
     tw := Round(TextWidth(s)) + 2;
-    // Jeœli tekst siê zmieœci, rysujemy
+    // Je?li tekst si? zmie?ci, rysujemy
     if tw <= (x2 - x1 + 1) then
       case Align of
         taLeftJustify:
@@ -2029,7 +2005,7 @@ begin
   begin
     s := AText;
     tw := round(TextWidth(s)) + 2;
-    // Jeœli tekst siê zmieœci, rysujemy
+    // Je?li tekst si? zmie?ci, rysujemy
     if tw <= (x2 - x1 + 1) then
       case Align of
         taLeftJustify:
@@ -2052,47 +2028,47 @@ begin
   end;
 end;
 
-procedure GradVertical(Canvas:TCanvas; Rect:TRectF; FromColor, ToColor:TAlphaColor) ;
- var
-   Y:integer;
-   dr,dg,db:Extended;
-   C1,C2: TAlphaColor;
-   r1,r2,g1,g2,b1,b2:Byte;
-   R,G,B:Byte;
-   cnt:Integer;
-   path:TPathData;
- begin
-    C1 := FromColor;
-    R1 := GetRValue(C1) ;
-    G1 := GetGValue(C1) ;
-    B1 := GetBValue(C1) ;
+procedure GradVertical(Canvas: TCanvas; Rect: TRectF; FromColor, ToColor: TAlphaColor);
+var
+  Y: integer;
+  dr, dg, db: Extended;
+  C1, C2: TAlphaColor;
+  r1, r2, g1, g2, b1, b2: Byte;
+  R, G, B: Byte;
+  cnt: Integer;
+  path: TPathData;
+begin
+  C1 := FromColor;
+  r1 := GetRValue(C1);
+  g1 := GetGValue(C1);
+  b1 := GetBValue(C1);
 
-    C2 := ToColor;
-    R2 := GetRValue(C2) ;
-    G2 := GetGValue(C2) ;
-    B2 := GetBValue(C2) ;
+  C2 := ToColor;
+  r2 := GetRValue(C2);
+  g2 := GetGValue(C2);
+  b2 := GetBValue(C2);
 
-    dr := (R2-R1) / (Rect.Bottom-Rect.Top);
-    dg := (G2-G1) / (Rect.Bottom-Rect.Top);
-    db := (B2-B1) / (Rect.Bottom-Rect.Top);
+  dr := (r2 - r1) / (Rect.Bottom - Rect.Top);
+  dg := (g2 - g1) / (Rect.Bottom - Rect.Top);
+  db := (b2 - b1) / (Rect.Bottom - Rect.Top);
 
-    cnt := 0;
-    Canvas.Stroke.Kind:= TBrushKind.Solid;
-    Canvas.BeginScene();
-    try
-      for Y := Round(Rect.Top) to Round(Rect.Bottom-1) do
-      begin
-         R := R1+Ceil(dr*cnt) ;
-         G := G1+Ceil(dg*cnt) ;
-         B := B1+Ceil(db*cnt) ;
-         Canvas.Stroke.Color := RGB(R,G,B) ;
-         Canvas.DrawLine(PointF(Rect.Left,Y), PointF(Rect.Right,Y),1) ;
-         Inc(cnt) ;
-      end;
-    finally
-      Canvas.EndScene;
+  cnt := 0;
+  Canvas.Stroke.Kind := TBrushKind.Solid;
+  Canvas.BeginScene();
+  try
+    for Y := Round(Rect.Top) to Round(Rect.Bottom - 1) do
+    begin
+      R := r1 + Ceil(dr * cnt);
+      G := g1 + Ceil(dg * cnt);
+      B := b1 + Ceil(db * cnt);
+      Canvas.Stroke.Color := RGB(R, G, B);
+      Canvas.DrawLine(PointF(Rect.Left, Y), PointF(Rect.Right, Y), 1);
+      Inc(cnt);
     end;
- end;
+  finally
+    Canvas.EndScene;
+  end;
+end;
 
 class procedure TGUITools.FillGradientRectangle(ACanvas: TCanvas; Rect: T2DIntRect; Radius: Integer; ColorFrom: TAlphaColor; ColorTo: TAlphaColor; GradientKind: TBackgroundKind; Corners: TCorners);
 var
@@ -2112,37 +2088,37 @@ begin
       bkSolid:
         begin
           ACanvas.Fill.color := ColorFrom;
-          cRect:=ACanvas.AlignToPixel(cRect);
+          cRect := ACanvas.AlignToPixel(cRect);
           ACanvas.fillrect(cRect, Radius, Radius, Corners, 1);
         end;
       bkVerticalGradient:
         begin
-          fill:= TBrush.Create(TBrushKind.Gradient, ColorFrom);
+          fill := TBrush.Create(TBrushKind.Gradient, ColorFrom);
           locGradient := TGradient.Create;
           with locGradient do
           begin
             Color := ColorFrom;
             Color1 := ColorTo;
-            Fill.Gradient.StartPosition.X := 0.499999999;
-            Fill.Gradient.StopPosition.X := 0.5;
-            Fill.Gradient.StartPosition.Y := 1;
-            Fill.Gradient.StopPosition.Y := 0;
+            fill.Gradient.StartPosition.X := 0.499999999;
+            fill.Gradient.StopPosition.X := 0.5;
+            fill.Gradient.StartPosition.Y := 1;
+            fill.Gradient.StopPosition.Y := 0;
           end;
 
-          with Fill do
+          with fill do
           begin
             Kind := TBrushKind.Gradient;
             Gradient := locGradient;
           end;
         //InflateRect(cRect, -0.5, -0.5);
           cRect := ACanvas.AlignToPixel(cRect);
-          ACanvas.FillRect(cRect, Radius, Radius, Corners, 1.0, Fill);
+          ACanvas.FillRect(cRect, Radius, Radius, Corners, 1.0, fill);
         end;
 
       bkHorizontalGradient:
         begin
           locGradient := TGradient.Create;
-          fill:= TBrush.Create(TBrushKind.Gradient, ColorFrom);
+          fill := TBrush.Create(TBrushKind.Gradient, ColorFrom);
           with locGradient do
           begin
             Color := ColorFrom;
@@ -2155,28 +2131,28 @@ begin
 
           end;
 
-          with Fill do
+          with fill do
           begin
             Kind := TBrushKind.Gradient;
             Gradient := locGradient;
           end;
           //InflateRect(cRect, -0.5, -0.5);
           cRect := ACanvas.AlignToPixel(cRect);
-          ACanvas.FillRect(cRect, Radius, Radius, Corners, 1.0, Fill);
+          ACanvas.FillRect(cRect, Radius, Radius, Corners, 1.0, fill);
         end;
       bkConcave:
         begin
           ConcaveColor := TColorTools.Brighten(ColorFrom, 20);
 
           locGradient := TGradient.Create;
-          fill:= TBrush.Create(TBrushKind.Gradient, ColorTo);
-          Fill.Gradient.Style := TGradientStyle.Linear;
-          Fill.Gradient.Points.Clear;
+          fill := TBrush.Create(TBrushKind.Gradient, ColorTo);
+          fill.Gradient.Style := TGradientStyle.Linear;
+          fill.Gradient.Points.Clear;
 
-          Fill.Gradient.StartPosition.X := 0.499999999;
-          Fill.Gradient.StopPosition.X := 0.5;
-          Fill.Gradient.StartPosition.Y := 1;
-          Fill.Gradient.StopPosition.Y := 0;
+          fill.Gradient.StartPosition.X := 0.499999999;
+          fill.Gradient.StopPosition.X := 0.5;
+          fill.Gradient.StartPosition.Y := 1;
+          fill.Gradient.StopPosition.Y := 0;
 
 //          with locGradient do
 //          begin
@@ -2188,19 +2164,19 @@ begin
 //            StopPosition.Y := 1;
 //          end;
 
-          p := TGradientPoint.Create(Fill.Gradient.Points);
+          p := TGradientPoint.Create(fill.Gradient.Points);
           p.IntColor := ColorFrom;
           p.Offset := 0;
 
-          p := TGradientPoint.Create(Fill.Gradient.Points);
+          p := TGradientPoint.Create(fill.Gradient.Points);
           p.Offset := 0.75;
           p.IntColor := ColorTo;
 
-          p := TGradientPoint.Create(Fill.Gradient.Points);
+          p := TGradientPoint.Create(fill.Gradient.Points);
           p.IntColor := ConcaveColor;
           p.Offset := 0.75;
 
-          p := TGradientPoint.Create(Fill.Gradient.Points);
+          p := TGradientPoint.Create(fill.Gradient.Points);
           p.IntColor := ConcaveColor;
           p.Offset := 1;
 
@@ -2225,7 +2201,6 @@ begin
 //          p.IntColor := $FFED9090;
 //          p.Offset := 1.000000000000000000;
 
-
 //          with Fill do
 //          begin
 //            Kind := TBrushKind.Gradient;
@@ -2235,9 +2210,8 @@ begin
         //InflateRect(cRect, -0.5, -0.5);
           cRect := ACanvas.AlignToPixel(cRect);
           //cRect.Offset(-0.5,-0.5);
-          ACanvas.FillRect(cRect, Radius, Radius, Corners, 1.0, Fill);
+          ACanvas.FillRect(cRect, Radius, Radius, Corners, 1.0, fill);
 //          GradVertical(ACanvas,cRect, ColorFrom, ColorTo );
-
 
 //        setlength(GradientVertice, 4);
 //        with GradientVertice[0] do
@@ -2298,7 +2272,7 @@ begin
   begin
     s := AText;
     tw := Round(TextWidth(s));
-    // Jeœli tekst siê zmieœci, rysujemy
+    // Je?li tekst si? zmie?ci, rysujemy
     if tw <= (x2 - x1 + 1) then
       case Align of
         taLeftJustify:
@@ -2326,12 +2300,12 @@ var
   TempRect: T2DIntRect;
 begin
 //  if ABuffer.PixelFormat <> pf24bit then
-//    raise exception.create('TGUITools.RenderBackground: Bitmapa musi byæ w trybie 24-bitowym!');
+//    raise exception.create('TGUITools.RenderBackground: Bitmapa musi by? w trybie 24-bitowym!');
   if (Rect.left > Rect.right) or (Rect.top > Rect.bottom) then
     exit;
 
-  // Zarówno metoda FillRect jak i WinAPI'owe rysowanie gradientów jest
-  // zabezpieczone przed rysowaniem poza obszarem p³ótna.
+  // Zar?wno metoda FillRect jak i WinAPI'owe rysowanie gradient?w jest
+  // zabezpieczone przed rysowaniem poza obszarem p??tna.
   case BackgroundKind of
     bkSolid:
       begin
@@ -2381,8 +2355,8 @@ class procedure TGUITools.DrawText(ABitmap: TBitmap; x, y: integer; AText: strin
 begin
   with ABitmap.canvas do
   begin
-    Fill.Kind := TBrushKind.None;
-    Fill.color := TextColor;
+    fill.Kind := TBrushKind.None;
+    fill.color := TextColor;
     TTextTools.TextOut(ABitmap.canvas, x, y, AText);
   end;
 end;
@@ -2395,7 +2369,7 @@ var
   ps, pe: TPointF;
 begin
 //  if ABitmap.PixelFormat <> pf24bit then
-//    raise exception.create('TGUITools.DrawHLine: Bitmapa musi byæ w trybie 24-bitowym!');
+//    raise exception.create('TGUITools.DrawHLine: Bitmapa musi by? w trybie 24-bitowym!');
 
   if y2 < y1 then
   begin
@@ -2414,9 +2388,9 @@ begin
   ps := Pointf(LineRect.left, LineRect.Top);
   pe := PointF(LineRect.left, LineRect.bottom + 1);
   ps := ABitmap.canvas.AlignToPixel(ps);
-  ps.Offset(0.5,0.5);
+  ps.Offset(0.5, 0.5);
   pe := ABitmap.canvas.AlignToPixel(pe);
-  pe.Offset(0.5,0.5);
+  pe.Offset(0.5, 0.5);
   ABitmap.canvas.DrawLine(ps, pe, 1);
   ABitmap.canvas.EndScene;
 end;
@@ -2430,7 +2404,7 @@ var
   ps, pe: TPointF;
 begin
 //  if ABitmap.PixelFormat <> pf24bit then
-//    raise exception.create('TGUITools.DrawHLine: Bitmapa musi byæ w trybie 24-bitowym!');
+//    raise exception.create('TGUITools.DrawHLine: Bitmapa musi by? w trybie 24-bitowym!');
 
   if y2 < y1 then
   begin
@@ -2451,9 +2425,9 @@ begin
   ps := Pointf(LineRect.left, LineRect.Top);
   pe := PointF(LineRect.left, LineRect.bottom + 1);
   ps := ABitmap.canvas.AlignToPixel(ps);
-  ps.Offset(0.5,0.5);
+  ps.Offset(0.5, 0.5);
   pe := ABitmap.canvas.AlignToPixel(pe);
-  pe.Offset(0.5,0.5);
+  pe.Offset(0.5, 0.5);
   ABitmap.canvas.DrawLine(ps, pe, 1);
   ABitmap.canvas.EndScene;
 end;
@@ -2474,9 +2448,9 @@ begin
   ps := Pointf(x, y1);
   pe := PointF(x, y2 + 1);
   ps := ACanvas.AlignToPixel(ps);
-  ps.Offset(0.5,0.5);
+  ps.Offset(0.5, 0.5);
   pe := ACanvas.AlignToPixel(pe);
-  pe.Offset(0.5,0.5);
+  pe.Offset(0.5, 0.5);
   ACanvas.DrawLine(ps, pe, 1);
   ACanvas.EndScene;
 end;
@@ -2487,7 +2461,7 @@ var
   ClipRgn: TRectF;
   ss: TCanvasSaveState;
 begin
-  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
   ss := ACanvas.SaveState;
   try
     ClipRgn := RectF(ClipRect.left, ClipRect.Top, ClipRect.Right + 1, ClipRect.Bottom + 1);
@@ -2502,7 +2476,7 @@ begin
     ACanvas.RestoreState(ss);
   end;
 
-  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych regionów
+  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych region?w
 
 end;
 
@@ -2523,7 +2497,7 @@ end;
 //  ACanvas.Stroke.color := Color;
 //  ACanvas.Stroke.Kind := TBrushKind.Solid;;
 //
-//  // Draw*Line s¹ zabezpieczone przed rysowaniem poza obszarem
+//  // Draw*Line s? zabezpieczone przed rysowaniem poza obszarem
 //  DrawVLine(ACanvas, Rect.left, Rect.top + Radius, Rect.bottom - Radius, Color);
 //  DrawVLine(ACanvas, Rect.right, Rect.top + Radius, Rect.bottom - Radius, Color);
 //  DrawHLine(ACanvas, Rect.left + Radius, Rect.right - Radius, Rect.top, Color);
@@ -2536,7 +2510,7 @@ end;
 //  ClipRgn: TRectF;
 //  ss: TCanvasSaveState;
 //begin
-//  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+//  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
 //  ss:= ACanvas.SaveState;
 //  try
 //  ClipRgn := RectF(ClipRect.left, ClipRect.Top, ClipRect.Right + 1, ClipRect.Bottom + 1);
@@ -2550,7 +2524,7 @@ end;
 //  finally
 //     ACanvas.RestoreState(ss);
 //  end;
-//  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych regionów
+//  // Przywracanie poprzedniego ClipRgn i usuwanie wykorzystanych region?w
 ////  RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 ////  DeleteObject(ClipRgn);
 //end;
@@ -2573,7 +2547,7 @@ var
   ss: TCanvasSaveState;
   ImRect: TRectF;
 begin
-  // Zapamiêtywanie oryginalnego ClipRgn i ustawianie nowego
+  // Zapami?tywanie oryginalnego ClipRgn i ustawianie nowego
   ss := ACanvas.SaveState;
 
   try
@@ -2583,8 +2557,8 @@ begin
     //ACanvas.IntersectClipRect(ClipRgn);
 //    SelectClipRgn(ACanvas.Handle, ClipRgn);
 
-  // Hack poprawiaj¹cy b³¹d w ImageList.Draw, który nie przywraca poprzedniego
-  // koloru czcionki dla p³ótna
+  // Hack poprawiaj?cy b??d w ImageList.Draw, kt?ry nie przywraca poprzedniego
+  // koloru czcionki dla p??tna
 //    DCStackPos := SaveDC(ACanvas.Handle);
 //    Imagelist.Draw(ACanvas, Point.x, Point.y, ImageIndex, false);
     if Imagelist.BitmapExists(ImageIndex) then
@@ -2622,27 +2596,35 @@ begin
   end;
 //  RestoreDC(ACanvas.Handle, DCStackPos);
 end;
-class procedure TGUITools.DrawCheckbox(ACanvas:TCanvas; x,y: Integer;
-  AState: TCheckboxState; AButtonState:TSpkButtonState;
-  AStyle: TSpkCheckboxStyle; ClipRect:T2DIntRect);
+
+class procedure TGUITools.DrawCheckbox(ACanvas: TCanvas; Control: TFmxObject; x, y: Integer; AState: TCheckboxState; AButtonState: TSpkButtonState; AStyle: TSpkCheckboxStyle; ClipRect: T2DIntRect);
 var
   UseOrgClipRgn: Boolean;
 //  OrgRgn: HRGN;
 //  ClipRgn: HRGN;
+  ss: TCanvasSaveState;
 begin
 //  SaveClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 //  ClipRgn := CreateRectRgn(ClipRect.left, ClipRect.Top, ClipRect.Right+1, ClipRect.Bottom+1);
 //  if UseOrgClipRgn then
 //    CombineRgn(ClipRgn, ClipRgn, OrgRgn, RGN_AND);
 //  SelectClipRgn(ACanvas.Handle, ClipRgn);
-  DrawCheckbox(ACanvas, x,y, AState, AButtonState, AStyle);
+
+  ACanvas.BeginScene();
+  try
+    ss := ACanvas.SaveState;
+//    ACanvas.IntersectClipRect(ClipRect.ForWinAPI);
+    DrawCheckbox(ACanvas, Control, x, y, AState, AButtonState, AStyle);
+  finally
+    ACanvas.RestoreState(ss);
+    ACanvas.EndScene;
+  end;
+
 //  RestoreClipRgn(ACanvas.Handle, UseOrgClipRgn, OrgRgn);
 //  DeleteObject(ClipRgn);
 end;
 
-class procedure TGUITools.DrawCheckbox(ACanvas: TCanvas; x,y: Integer;
-  AState: TCheckboxState; AButtonState: TSpkButtonState;
-  AStyle: TSpkCheckboxStyle);
+class procedure TGUITools.DrawCheckbox(ACanvas: TCanvas; Control: TFmxObject; x, y: Integer; AState: TCheckboxState; AButtonState: TSpkButtonState; AStyle: TSpkCheckboxStyle);
 //const
 //  NOT_USED = tbCheckboxCheckedNormal;
 //const
@@ -2661,15 +2643,21 @@ class procedure TGUITools.DrawCheckbox(ACanvas: TCanvas; x,y: Integer;
 //    )
 //  );
 var
-  R: TRect;
+  R: TRectF;
   w: Integer;
   sz: TSize;
+  cb: TCheckBox;
+  rb: TRadioButton;
+  a: TBitmap;
+  checked: Boolean;
+  res: Boolean;
+
+
 //  te: TThemedElementDetails;
 begin
 //  if ThemeServices.ThemesEnabled then begin
 //    te := ThemeServices.GetElementDetails(THEMED_FLAGS[AStyle, AState, AButtonState]);
 //    sz := ThemeServices.GetDetailSize(te);
-//    R := Bounds(x, y, sz.cx, sz.cy);
 //    InflateRect(R, 1, 1);
 //    ThemeServices.DrawElement(ACanvas.Handle, te, R);
 //  end else begin
@@ -2678,16 +2666,50 @@ begin
 //    DrawFrameControl(
 //      ACanvas.Handle, R, DFC_BUTTON, UNTHEMED_FLAGS[AStyle, AState]);
 //  end;
-    case AStyle of
-       cbsCheckbox:
-       begin
-       end;
-       cbsRadioButton:
-       begin
-       end;
+  case AStyle of
+    cbsCheckbox:
+      begin
+        cb := TCheckBox.Create(nil);
+        try
+          //cb.Visible:=False;
+          cb.Parent:= Control;
+          cb.ApplyStyleLookup;
+          cb.IsChecked:=AState in [TCheckBoxState.cbChecked];
 
-    end;
+          R := RectF(x, y, x + cb.Width, y + cb.height);
+
+          ACanvas.BeginScene();
+          cb.PaintTo(ACanvas, R, Control);
+          ACanvas.EndScene;
+        finally
+//          cb.Parent:= nil;
+//          FreeAndNil(cb);
+          cb.DisposeOf;
+        end;
+      end;
+    cbsRadioButton:
+      begin
+
+        rb := TRadioButton.Create(nil);
+        try
+          //rb.Visible:= False;
+          rb.Parent:= Control;
+          rb.ApplyStyleLookup;
+          rb.IsChecked:=AState in [TCheckBoxState.cbChecked];
+
+          R := RectF(x, y, x + rb.Width, y + rb.height);
+
+          ACanvas.BeginScene();
+          rb.PaintTo(ACanvas, R);
+          ACanvas.EndScene;
+        finally
+//          rb.Parent:= nil;
+//          FreeAndNil(rb);
+          rb.DisposeOf;
+        end;
+      end;
+
+  end;
 end;
 
 end.
-

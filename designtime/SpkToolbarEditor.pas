@@ -4,56 +4,14 @@ interface
 
 //** Converted with Mida BASIC 277     http://www.midaconverter.com
 
-
-
-Uses
-  System.SysUtils,
-  System.Types,
-  System.UITypes,
-  System.Classes,
-  System.Variants,
-  System.IniFiles,
-  Data.DB,
-  FMX.Types,
-  FMX.Controls,
-  FMX.Forms,
-  FMX.Dialogs,
-  FMX.Objects,
-  FMX.Menus,
-  FMX.Grid,
-  FMX.ExtCtrls,
-  FMX.ListBox,
-  FMX.TreeView,
-  FMX.Memo,
-  FMX.TabControl,
-  FMX.Layouts,
-  FMX.Edit,
-  FMX.Platform,
-  FMX.Bind.DBEngExt,
-  FMX.Bind.Editors,
-  FMX.Bind.DBLinks,
-  FMX.Bind.Navigator,
-  Data.Bind.EngExt,
-  Data.Bind.Components,
-  Data.Bind.DBScope,
-  Data.Bind.DBLinks,
-  Datasnap.DBClient,
-  Fmx.Bind.Grid,
-  System.Rtti,
-  System.Bindings.Outputs,
-  Data.Bind.Grid,
-  Fmx.StdCtrls,
-  FMX.Header,
-  FMX.Graphics,
-  System.TypInfo,
-  ToolsAPI, DesignIntf, DesignEditors, DesignMenus, DesignWindows,
-  spkToolbar, spkt_Tab, spkt_Pane, spkt_Appearance,
-  spkte_AppearanceEditor,
-  spkte_EditWindow;
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  System.TypInfo,  DesignIntf, DesignEditors, spkToolbar,
+  spkt_Tab, spkt_Pane, spkt_Appearance, spkte_AppearanceEditor, spkte_EditWindow;
 
 
 
-//**   Original VCL Uses section : 
+//**   Original VCL Uses section :
 
 
 //** FMX.CONTROLS, CLASSES, DESIGNEDITORS, DESIGNINTF, TYPINFO, FMX.DIALOGS,
@@ -61,83 +19,82 @@ Uses
 //**      spkToolbar, spkt_Tab, spkt_Pane, spkt_Appearance,
 //**      spkte_EditWindow, spkte_AppearanceEditor;
 
+const
+  PROPERTY_CONTENTS_NAME = 'Contents';
+  PROPERTY_CONTENTS_VALUE = 'Open editor...';
 
+type
+  TAddContentsFilter = class(TSelectionEditor{, ISelectionPropertyFilter})
+  public
+    procedure FilterProperties(const ASelection: IDesignerSelections; const ASelectionProperties: IInterfaceList);
+  end;
 
+type
+  TSpkToolbarContentsEditor = class(TBasePropertyEditor, IProperty{, IPropertyKind})
+  private
+  protected
+    FPropList: PInstPropList;
+    FPropCount: integer;
+    FDesigner: IDesigner;
+    FToolbar: TSpkToolbar;
+    procedure SetPropEntry(Index: Integer; AInstance: TPersistent; APropInfo: PPropInfo); override;
+    procedure Initialize; override;
+  public
+    constructor Create(const ADesigner: IDesigner; APropCount: Integer); override;
+    destructor Destroy; override;
+    procedure Activate;
+    function AllEqual: Boolean;
+    function AutoFill: Boolean;
+    procedure Edit;
+    function HasInstance(Instance: TPersistent): Boolean;
+    function GetAttributes: TPropertyAttributes;
+    function GetEditLimit: Integer;
+    function GetEditValue(out Value: string): Boolean;
+    function GetName: string;
+    procedure GetProperties(Proc: TGetPropProc);
+    function GetPropInfo: PPropInfo;
+    function GetPropType: PTypeInfo;
+    function GetValue: string;
+    procedure GetValues(Proc: TGetStrProc);
+    procedure Revert;
+    procedure SetValue(const Value: string);
+    function ValueAvailable: Boolean;
+    function GetKind: TTypeKind;
+    property PropCount: integer read FPropCount;
+    property Designer: IDesigner read FDesigner;
+    property Toolbar: TSpkToolbar read FToolbar write FToolbar;
+  end;
 
-const PROPERTY_CONTENTS_NAME = 'Contents';
-      PROPERTY_CONTENTS_VALUE = 'Open editor...';
+type
+  TSpkToolbarCaptionEditor = class(TStringProperty)
+  private
+  protected
+  public
+    procedure SetValue(const Value: string); override;
+  end;
 
-type TAddContentsFilter = class(TSelectionEditor{, ISelectionPropertyFilter})
-     public
-       procedure FilterProperties(const ASelection: IDesignerSelections; const ASelectionProperties: IInterfaceList);
-     end;
+type
+  TSpkToolbarAppearanceEditor = class(TClassProperty)
+  private
+  protected
+  public
+    function GetAttributes: TPropertyAttributes; override;
+    procedure Edit; override;
+  end;
 
-type TSpkToolbarContentsEditor = class(TBasePropertyEditor, IProperty{, IPropertyKind})
-     private
-     protected
-       FPropList : PInstPropList;
-       FPropCount : integer;
-       FDesigner : IDesigner;
-       FToolbar : TSpkToolbar;
+type
+  TSpkToolbarEditor = class(TComponentEditor)
+  protected
+    procedure DoOpenContentsEditor;
+  public
+    procedure Edit; override;
+    procedure ExecuteVerb(Index: Integer); override;
+    function GetVerb(Index: Integer): string; override;
+    function GetVerbCount: Integer; override;
+  end;
 
-       procedure SetPropEntry(Index: Integer; AInstance: TPersistent;
-          APropInfo: PPropInfo); override;
-       procedure Initialize; override;
-     public
-       constructor Create(const ADesigner: IDesigner; APropCount: Integer); override;
-       destructor Destroy; override;
-
-       procedure Activate;
-       function AllEqual: Boolean;
-       function AutoFill: Boolean;
-       procedure Edit;
-       function HasInstance(Instance: TPersistent): Boolean;
-       function GetAttributes: TPropertyAttributes;
-       function GetEditLimit: Integer;
-       function GetEditValue(out Value: string): Boolean;
-       function GetName: string;
-       procedure GetProperties(Proc: TGetPropProc);
-       function GetPropInfo: PPropInfo;
-       function GetPropType: PTypeInfo;
-       function GetValue: string;
-       procedure GetValues(Proc: TGetStrProc);
-       procedure Revert;
-       procedure SetValue(const Value: string);
-       function ValueAvailable: Boolean;
-
-       function GetKind: TTypeKind;
-
-       property PropCount : integer read FPropCount;
-       property Designer : IDesigner read FDesigner;
-       property Toolbar : TSpkToolbar read FToolbar write FToolbar;
-     end;
-
-type TSpkToolbarCaptionEditor = class(TStringProperty)
-     private
-     protected
-     public
-       procedure SetValue(const Value: string); override;
-     end;
-
-type TSpkToolbarAppearanceEditor = class(TClassProperty)
-     private
-     protected
-     public
-       function GetAttributes: TPropertyAttributes; override;
-       procedure Edit; override;
-     end;
-
-type TSpkToolbarEditor = class(TComponentEditor)
-     protected
-       procedure DoOpenContentsEditor;
-     public
-       procedure Edit; override;
-       procedure ExecuteVerb(Index: Integer); override;
-       function GetVerb(Index: Integer): string; override;
-       function GetVerbCount: Integer; override;
-     end;
-
-var EditWindow : TfrmEditWindow;
+var
+  EditWindow: TfrmEditWindow;
 
 implementation
 
@@ -150,21 +107,20 @@ end;
 
 function TSpkToolbarContentsEditor.AllEqual: Boolean;
 begin
-result:=FPropCount = 1;
+  result := FPropCount = 1;
 end;
 
 function TSpkToolbarContentsEditor.AutoFill: Boolean;
 begin
-result:=false;
+  result := false;
 end;
 
-constructor TSpkToolbarContentsEditor.Create(const ADesigner: IDesigner;
-  APropCount: Integer);
+constructor TSpkToolbarContentsEditor.Create(const ADesigner: IDesigner; APropCount: Integer);
 begin
   inherited Create(ADesigner, APropCount);
-  FDesigner:=ADesigner;
-  FPropCount:=APropCount;
-  FToolbar:=nil;
+  FDesigner := ADesigner;
+  FPropCount := APropCount;
+  FToolbar := nil;
   GetMem(FPropList, APropCount * SizeOf(TInstProp));
   FillChar(FPropList^, APropCount * SizeOf(TInstProp), 0);
 end;
@@ -178,34 +134,34 @@ end;
 
 procedure TSpkToolbarContentsEditor.Edit;
 begin
-  EditWindow.SetData(FToolbar,self.Designer);
-  EditWindow.Show;
+//  EditWindow.SetData(FToolbar, self.Designer);
+//  EditWindow.Show;
 end;
 
 function TSpkToolbarContentsEditor.GetAttributes: TPropertyAttributes;
 begin
-result:=[paDialog, paReadOnly];
+  result := [paDialog, paReadOnly];
 end;
 
 function TSpkToolbarContentsEditor.GetEditLimit: Integer;
 begin
-result:=0;
+  result := 0;
 end;
 
 function TSpkToolbarContentsEditor.GetEditValue(out Value: string): Boolean;
 begin
-Value:=GetValue;
-result:=true;
+  Value := GetValue;
+  result := true;
 end;
 
 function TSpkToolbarContentsEditor.GetKind: TTypeKind;
 begin
-result:=tkClass;
+  result := tkClass;
 end;
 
 function TSpkToolbarContentsEditor.GetName: string;
 begin
-result:=PROPERTY_CONTENTS_NAME;
+  result := PROPERTY_CONTENTS_NAME;
 end;
 
 procedure TSpkToolbarContentsEditor.GetProperties(Proc: TGetPropProc);
@@ -215,17 +171,17 @@ end;
 
 function TSpkToolbarContentsEditor.GetPropInfo: PPropInfo;
 begin
-Result:=nil;
+  Result := nil;
 end;
 
 function TSpkToolbarContentsEditor.GetPropType: PTypeInfo;
 begin
-Result:=nil;
+  Result := nil;
 end;
 
 function TSpkToolbarContentsEditor.GetValue: string;
 begin
-result:=PROPERTY_CONTENTS_VALUE;
+  result := PROPERTY_CONTENTS_VALUE;
 end;
 
 procedure TSpkToolbarContentsEditor.GetValues(Proc: TGetStrProc);
@@ -235,7 +191,7 @@ end;
 
 function TSpkToolbarContentsEditor.HasInstance(Instance: TPersistent): Boolean;
 begin
-  result:=EditWindow.Toolbar = Instance;
+  result := EditWindow.Toolbar = Instance;
 end;
 
 procedure TSpkToolbarContentsEditor.Initialize;
@@ -248,14 +204,13 @@ begin
 //
 end;
 
-procedure TSpkToolbarContentsEditor.SetPropEntry(Index: Integer; AInstance: TPersistent;
-  APropInfo: PPropInfo);
+procedure TSpkToolbarContentsEditor.SetPropEntry(Index: Integer; AInstance: TPersistent; APropInfo: PPropInfo);
 begin
-with FPropList^[Index] do
-     begin
-     Instance := AInstance;
-     PropInfo := APropInfo;
-     end;
+  with FPropList^[Index] do
+  begin
+    Instance := AInstance;
+    PropInfo := APropInfo;
+  end;
 end;
 
 procedure TSpkToolbarContentsEditor.SetValue(const Value: string);
@@ -265,93 +220,90 @@ end;
 
 function TSpkToolbarContentsEditor.ValueAvailable: Boolean;
 begin
-result:=true;
+  result := true;
 end;
 
 { TSelectionFilter }
 
-procedure TAddContentsFilter.FilterProperties(
-  const ASelection: IDesignerSelections;
-  const ASelectionProperties: IInterfaceList);
-
-var ContentsEditor : TSpkToolbarContentsEditor;
-    Prop : IProperty;
-    i : integer;
-    Added : boolean;
-
+procedure TAddContentsFilter.FilterProperties(const ASelection: IDesignerSelections; const ASelectionProperties: IInterfaceList);
+var
+  ContentsEditor: TSpkToolbarContentsEditor;
+  Prop: IProperty;
+  i: integer;
+  Added: boolean;
 begin
-if ASelection.Count<>1 then
-   exit;
+  if ASelection.Count <> 1 then
+    exit;
 
-if ASelection[0] is TSpkToolbar then
-   begin
-   ContentsEditor:=TSpkToolbarContentsEditor.Create(inherited Designer, 1);
-   ContentsEditor.Toolbar:=ASelection[0] as TSpkToolbar;
+  if ASelection[0] is TSpkToolbar then
+  begin
+    ContentsEditor := TSpkToolbarContentsEditor.Create(inherited Designer, 1);
+    ContentsEditor.Toolbar := ASelection[0] as TSpkToolbar;
 
-   i:=0;
-   Added:=false;
-   while (i<ASelectionProperties.Count) and not Added do
-         begin
-         ASelectionProperties.Items[i].QueryInterface(IProperty, Prop);
-         if (assigned(Prop)) and (Prop.GetName>PROPERTY_CONTENTS_NAME) then
-            begin
-            ASelectionProperties.Insert(i, ContentsEditor);
-            Added:=true;
-            end;
-         inc(i);
-         end;
+    i := 0;
+    Added := false;
+    while (i < ASelectionProperties.Count) and not Added do
+    begin
+      ASelectionProperties.Items[i].QueryInterface(IProperty, Prop);
+      if (assigned(Prop)) and (Prop.GetName > PROPERTY_CONTENTS_NAME) then
+      begin
+        ASelectionProperties.Insert(i, ContentsEditor);
+        Added := true;
+      end;
+      inc(i);
+    end;
 
-   if not(Added) then
+    if not (Added) then
       ASelectionProperties.Add(ContentsEditor as IProperty);
-   end;
+  end;
 end;
 
 { TSpkToolbarEditor }
 
 procedure TSpkToolbarEditor.DoOpenContentsEditor;
-
-var Component : TComponent;
-    Toolbar : TSpkToolbar;
-    Designer : IDesigner;
-
+var
+  Component: TComponent;
+  Toolbar: TSpkToolbar;
+  Designer: IDesigner;
 begin
-        Component:=self.GetComponent;
-        if not(assigned(Component)) then
-           exit;
+  Component := self.GetComponent;
+  if not (assigned(Component)) then
+    exit;
 
-        if not(Component is TSpkToolbar) then
-           exit;
+  if not (Component is TSpkToolbar) then
+    exit;
 
-        Toolbar:=Component as TSpkToolbar;
-        Designer:=self.GetDesigner;
+  Toolbar := Component as TSpkToolbar;
+  Designer := self.GetDesigner;
 
-        EditWindow.SetData(Toolbar,Designer);
-        EditWindow.Show;
+  EditWindow.SetData(Toolbar, Designer);
+  EditWindow.Show;
 end;
 
 procedure TSpkToolbarEditor.Edit;
-
 begin
-        DoOpenContentsEditor;
+//  DoOpenContentsEditor;
 end;
 
 procedure TSpkToolbarEditor.ExecuteVerb(Index: Integer);
 begin
-case Index of
-     0 : DoOpenContentsEditor;
-end;
+  case Index of
+    0:
+      DoOpenContentsEditor;
+  end;
 end;
 
 function TSpkToolbarEditor.GetVerb(Index: Integer): string;
 begin
-case Index of
-     0 : result:='Contents editor...';
-end;
+  case Index of
+    0:
+      result := 'Contents editor...';
+  end;
 end;
 
 function TSpkToolbarEditor.GetVerbCount: Integer;
 begin
-result:=1;
+  result := 1;
 end;
 
 { TSpkToolbarCaptionEditor }
@@ -365,61 +317,59 @@ end;
 { TSpkToolbarAppearanceEditor }
 
 procedure TSpkToolbarAppearanceEditor.Edit;
-
-var Obj : TObject;
-    Toolbar : TSpkToolbar;
-    Tab : TSpkTab;
-    AppearanceEditor : tfrmAppearanceEditWindow;
-
+var
+  Obj: TObject;
+  Toolbar: TSpkToolbar;
+  Tab: TSpkTab;
+  AppearanceEditor: tfrmAppearanceEditWindow;
 begin
-Obj:=GetComponent(0);
-if Obj is TSpkToolbar then
-   begin
-   Toolbar:=(Obj as TSpkToolbar);
+  Obj := GetComponent(0);
+  if Obj is TSpkToolbar then
+  begin
+    Toolbar := (Obj as TSpkToolbar);
 
-   AppearanceEditor:=TfrmAppearanceEditWindow.Create(nil);
-   try
-     AppearanceEditor.Appearance.Assign(Toolbar.Appearance);
-     if AppearanceEditor.ShowModal = mrOK then
-        begin
+    AppearanceEditor := TfrmAppearanceEditWindow.Create(nil);
+    try
+      AppearanceEditor.Appearance.Assign(Toolbar.Appearance);
+      if AppearanceEditor.ShowModal = mrOK then
+      begin
         Toolbar.Appearance.Assign(AppearanceEditor.Appearance);
         Modified;
-        end;
-   finally
-     AppearanceEditor.Free;
-   end;
+      end;
+    finally
+      AppearanceEditor.Free;
+    end;
 
-   end else
-if Obj is TSpkTab then
-   begin
-   Tab:=(Obj as TSpkTab);
+  end
+  else if Obj is TSpkTab then
+  begin
+    Tab := (Obj as TSpkTab);
 
-   AppearanceEditor:=TfrmAppearanceEditWindow.Create(nil);
-   try
-     AppearanceEditor.Appearance.Assign(Tab.CustomAppearance);
-     if AppearanceEditor.ShowModal = mrOK then
-        begin
+    AppearanceEditor := TfrmAppearanceEditWindow.Create(nil);
+    try
+      AppearanceEditor.Appearance.Assign(Tab.CustomAppearance);
+      if AppearanceEditor.ShowModal = mrOK then
+      begin
         Tab.CustomAppearance.Assign(AppearanceEditor.Appearance);
         Modified;
-        end;
-   finally
-     AppearanceEditor.Free;
-   end;
+      end;
+    finally
+      AppearanceEditor.Free;
+    end;
 
-   end;
+  end;
 end;
 
 function TSpkToolbarAppearanceEditor.GetAttributes: TPropertyAttributes;
 begin
-  result:=inherited GetAttributes + [paDialog] - [paMultiSelect];
+  result := inherited GetAttributes + [paDialog] - [paMultiSelect];
 end;
 
 initialization
-
-EditWindow:=TfrmEditWindow.create(nil);
+  EditWindow := TfrmEditWindow.create(nil);
 
 finalization
-
-EditWindow.Free;
+  EditWindow.Free;
 
 end.
+

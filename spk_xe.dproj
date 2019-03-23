@@ -120,6 +120,14 @@
         <DCCReference Include="SpkXML\SpkXMLTools.pas"/>
         <DCCReference Include="SpkGUITools\SpkGUITools.pas"/>
         <DCCReference Include="designtime\SpkToolbarEditor.pas"/>
+        <DCCReference Include="designtime\spkte_EditWindow.pas">
+            <Form>frmEditWindow</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
+        <DCCReference Include="designtime\spkte_AppearanceEditor.pas">
+            <Form>frmAppearanceEditWindow</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -266,7 +266,7 @@ procedure TSpkCollection.RemoveReference(Item: TComponent);
 var
   i: integer;
 begin
-  if FList = nil then
+  if not Assigned(FList) or (FList = nil) then
     Exit;
 
   i := FList.IndexOf(Item);
